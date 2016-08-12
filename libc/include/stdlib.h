@@ -16,7 +16,8 @@
 	extern "C" {
 #endif
 
-void abort(void) __atribute__((__noreturn__));		//__noreturn__ that means that the function won't ever returnn
+__attribute__((__noreturn__))
+void abort(void);				//__noreturn__ that means that the function won't ever returnn
 char* itoa(int, char*, int);
 
 #ifdef _cplusplus

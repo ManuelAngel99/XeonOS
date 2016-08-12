@@ -18,7 +18,7 @@
 size_t cursor_x;
 size_t cursor_y;
 uint8_t terminal_color;
-uint16_t terminal_buffer;
+uint16_t* terminal_buffer;
 
 void new_line_check(void);
 void new_line(void);
@@ -39,7 +39,7 @@ int terminal_putentryat(char character, uint8_t color, size_t x, size_t y)
 	if( cursor_x <= VGA_TERMINAL_WIDTH && cursor_y <= VGA_TERMINAL_HEIGHT)
 	{
 		const size_t index = (VGA_TERMINAL_WIDTH * y) + x;
-		terminal_buffer[index] = make_vgaentry(c, color);
+		terminal_buffer[index] = make_vgaentry(character, color);
 		return 0;
 	}
 
@@ -62,8 +62,7 @@ void terminal_putchar(char character)
 			}
 		break;
 
-		case '\r'
-		{
+		case '\r':
 			cursor_x = 0;
 		break;
 
@@ -99,7 +98,7 @@ void terminal_clear_screen(void)
 	{
 		for (size_t x = 0; x < VGA_TERMINAL_WIDTH; x++)
 		{
-			terminal_buffer[index] = make_vgaentry(' ', terminal_color);
+			terminal_buffer[ (VGA_TERMINAL_WIDTH * y) + x] = make_vgaentry(' ', terminal_color);
 		}
 	}
 }

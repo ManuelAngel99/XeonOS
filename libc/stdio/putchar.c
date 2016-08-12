@@ -16,8 +16,8 @@
 int putchar(int integer_character)
 {
 #if defined(__is_xeonos_kernel)
-	char chacacter = (char)ic;
-	terminal_putchar(character):
+	char character = (char)integer_character;
+	terminal_putchar(character);
 #else
 	//TODO: IMPLEMENT A SYSTEM CALL
 #endif

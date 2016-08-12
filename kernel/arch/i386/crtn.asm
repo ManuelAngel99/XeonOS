@@ -11,6 +11,6 @@ section .init
 	pop ebp
 ret
 
-settion .fini
+section .fini
 	pop ebp
 ret

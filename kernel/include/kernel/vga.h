@@ -17,7 +17,7 @@ static const size_t VGA_TERMINAL_WIDTH  = 80;
 
 static uint16_t* const VIDEO_MEMORY = (uint16_t*) 0xB8000;
 
-typedef enum
+enum vga_color
 {
     BLACK     = 0,
     BLUE      = 1,
@@ -35,7 +35,7 @@ typedef enum
     L_MAGENTA = 13,
     L_BROWN   = 14,
     WHITE     = 15      
-} colours;
+};
 
 /*
     NOTE: Functions declared as static so they are only visible to other functions in the same translation unit (this file and the files who include it)

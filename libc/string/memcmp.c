@@ -7,10 +7,13 @@
 * Description: Implementation of the standard c memcmp function
 */
 
+#include <string.h>
+#include <stddef.h>
+
 int memcmp(const void* first_chunk, const void* second_chunk, size_t size)
 {
-	const unsigned char* first_ptr =  (const unsigned char*) first_ptr;
-	const unsigned char* second_ptr = (const unsigned char*) second_ptr;
+	const unsigned char* first_ptr =  (const unsigned char*) first_chunk;
+	const unsigned char* second_ptr = (const unsigned char*) second_chunk;
 
 	for(size_t i = 0; i < size; i++)
 	{

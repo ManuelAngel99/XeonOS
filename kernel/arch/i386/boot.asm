@@ -36,15 +36,14 @@ start:
     mov esp, stack_top                                                      ; Set the stack pointer to the top of our stack
     
     call kernel_early                                                       ; Init the core kernel code
-    call constructors_init                                                  ; Call global constructors
     call kernel_main                                                        ; Call kernel main
 
     cli                                                                     ; Loop forever
-loop:
+.hang:
     hlt
-    jmp loop
+    jmp .hang
 
-.end:                                                                       ; Set the start.end to the end of the start function
+.end:                                                                      ; Set the start.end to the end of the start function
 
 
 ; Set up the stack (has to be 16KiB aligned) and the stack_bottom and stack_top symbols

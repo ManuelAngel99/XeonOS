@@ -7,7 +7,7 @@
 * Description: Implements the modf function wich returns returns the fraction component (part after the decimal), and sets integer to the integer component.
 */
 
-#include <math.h>	
+#include <math.h>
 
 double modf(double value, double* intpart)
 {

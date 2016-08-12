@@ -8,15 +8,15 @@
 ;
 
 section .init
-global init:function()
+global init:function (init.end - init)
 init:
 	push ebp
 	mov esp, ebp
-.end
+.end:
 
 section .fini
-global fini:function()
+global fini:function (fini.end - fini)
 fini:
 	push ebp
 	mov esp, ebp
-.end
+.end:

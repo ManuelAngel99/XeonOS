@@ -10,7 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void abort(void) __attribute__((__noreturn__))
+__attribute__((__noreturn__)) void abort(void)
 {
 	//Need to implement a proper kernel panic
 	printf("Kernel Panic: abort\n");

@@ -7,8 +7,8 @@
 * Description: Defines some mathematical utilities
 */
 
-##ifndef _MATH_H
-#define _MATH_H
+#ifndef _ADDI_MATH_H
+#define _ADDI_MATH_H
 
 #include <sys/cdefs.h>
 #include <stddef.h>
@@ -17,17 +17,15 @@
 	extern "C" {
 #endif
 
-int floor(double);
-int ceil(double);
-int round(double);
+double floor(double);
+double ceil(double);
+double round(double);
+double pow(double, double);
 double precise_round(double, size_t);
 double modf(double, double*);
-double pow(double, int);
 
 #ifdef _cplusplus
 }
 #endif
-
-
 
 #endif // _MATH_H

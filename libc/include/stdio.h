@@ -9,8 +9,11 @@
 #ifndef STDIO_H
 #define STDIO_H
 
+
 #include <sys/cdefs.h>
 #include <stddef.h>
+
+#define PRINT_FLOAT_PRECISION 5
 
 #ifdef _cplusplus
 	extern "C" {
@@ -19,7 +22,6 @@
 int printf(const char* __restrict, ...);
 int putchar(int);
 int puts(const char*);
-void print_double(double, size_t);
 
 #ifdef _cplusplus
 }

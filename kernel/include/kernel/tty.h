@@ -12,6 +12,7 @@
 #define _K_TTY_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 void terminal_setup(void);
 

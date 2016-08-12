@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 char* itoa(int num, char* str, int base)
 {

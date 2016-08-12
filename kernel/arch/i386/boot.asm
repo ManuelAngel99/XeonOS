@@ -1,5 +1,10 @@
 ;
-; Boot.asm: Defines the multiboot header. sets up the stack and calls kernel_main
+; Author: Manuel Ángel Suárez Álvarez
+; E-mail Manuel_Angel99@outlook.com
+; Created: 2016-08-11 11:14:47
+; 
+; File: boot.asm
+; Description: Defines the multiboot header. sets up the stack and calls kernel_main
 ;
 
 MBOOT_PAGE_ALIGN    equ 1 << 0                                              ; Align the kernel and its modules at a page boundary
@@ -13,7 +18,7 @@ MBOOT_CHECKSUM      equ -(MBOOT_MAGIC + MBOOT_FLAGS)                        ; Ch
 STACK_SIKE          equ 0x8000                                              ; Set the stack size to 32 KiB
 
 ; Write the multiboot header data so grub can load us
-section .multboot
+section .multiboot
     align 4
     dd MBOOT_MAGIC
     dd MBOOT_FLAGS
@@ -34,11 +39,16 @@ start:
     call constructors_init                                                  ; Call global constructors
     call kernel_main                                                        ; Call kernel main
 
+    cli                                                                     ; Loop forever
+loop:
+    hlt
+    jmp loop
+
 .end:                                                                       ; Set the start.end to the end of the start function
 
 
 ; Set up the stack (has to be 16KiB aligned) and the stack_bottom and stack_top symbols
-section .bss
+section .bootstrap_stack nobits
     align 16
     stack_bottom:
         resb STACK_SIKE

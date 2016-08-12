@@ -1,0 +1,2 @@
+1. Implement kernel panic
+2. Implement putchar systemcall

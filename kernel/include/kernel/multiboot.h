@@ -1,6 +1,10 @@
 #ifndef MULTIBOOT_H
 #define MULTIBOOT_H
 
+#ifdef _cplusplus
+  extern "C" {
+#endif
+
 /* multiboot.h - the header for Multiboot */
      /* Copyright (C) 1999, 2001  Free Software Foundation, Inc.
      
@@ -120,5 +124,10 @@
      } memory_map_t;
      
      #endif /* ! ASM */
+
+#ifdef _cplusplus
+}
+#endif
+
 
 #endif // MULTIBOOT_H

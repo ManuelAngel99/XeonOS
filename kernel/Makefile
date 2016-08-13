@@ -30,6 +30,7 @@ LIBS:=$(LIBS) $(KERNEL_ARCH_LIBS)
 OBJS:=\
 $(KERNEL_ARCH_OBJS) \
 $(patsubst %.c, %.o, $(wildcard */*.c)) \
+$(patsubst %.cpp, %.o, $(wildcard */*.cpp)) \
 
 CRTI_OBJ:=$(ARCHDIR)/crti.o
 CRTBEGIN_OBJ:=$(shell $(CC) $(CFLAGS) $(LDFLAGS) -print-file-name=crtbegin.o)
@@ -58,18 +59,16 @@ XeonOS.kernel: $(OBJ_LINK_LIST) $(ARCHDIR)/linker.ld
 %.o: %.c
 	$(CC) -c $< -o $@ -std=gnu11 $(CFLAGS) $(CPPFLAGS)
 
+%.o: %.cpp
+	$(CPPC) -c $< -o $@ -std=c++14 $(CFLAGS) $(CPPFLAGS) -fno-exceptions -fno-rtti
+
 %.o: %.asm
 	$(AS) $(ASFLAGS) $< -o $@
-
-%.o: %.S
-	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
-
 
 clean:
 	rm -f XeonOS.kernel $(OBJS) $(ALL_OUR_OBJS) *.o */*.o */*/*.o
 
 install: install-headers install-kernel
-
 install-headers:
 	mkdir -p $(DESTDIR)$(INCLUDEDIR)
 	cp -RTv include $(DESTDIR)$(INCLUDEDIR)

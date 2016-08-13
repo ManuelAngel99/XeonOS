@@ -19,6 +19,7 @@ size_t cursor_x;
 size_t cursor_y;
 uint8_t terminal_color;
 uint16_t* terminal_buffer;
+size_t tab_size;
 
 void new_line_check(void);
 void new_line(void);
@@ -26,13 +27,21 @@ void new_line(void);
 void terminal_setup(void)
 {
 	cursor_x = cursor_y = 0;
+	tab_size = 4;
 	terminal_color = make_color(L_GRAY, BLUE);
 	terminal_buffer = VIDEO_MEMORY;
 
 	terminal_clear_screen();
 }
 
-
+void terminal_gotoxy(size_t x, size_t y)
+{
+	if(x < VGA_TERMINAL_WIDTH && y < VGA_TERMINAL_HEIGHT)
+	{
+		cursor_x = x;
+		cursor_y = y;
+	}
+}
 
 int terminal_putentryat(char character, uint8_t color, size_t x, size_t y)
 {
@@ -67,7 +76,7 @@ void terminal_putchar(char character)
 		break;
 
 		case '\t':
-			cursor_x = (cursor_x + 8) & ~(8 - 1);
+			cursor_x = (cursor_x + tab_size) & ~(tab_size - 1);
 		break;
 
 		default:
@@ -132,11 +141,17 @@ void new_line(void)
 
 void scroll_up(size_t number_of_lines)
 {
-
+	if(number_of_lines < VGA_TERMINAL_HEIGHT)
+	{
 	for(size_t index = 0; index < VGA_TERMINAL_WIDTH * (VGA_TERMINAL_HEIGHT - 1) ; index++)
 		terminal_buffer[index] = terminal_buffer[index + VGA_TERMINAL_WIDTH*number_of_lines];
 	for(size_t j = 1; j <= number_of_lines; j++)
 		terminal_clear_line(VGA_TERMINAL_HEIGHT - j );
+	}
+	else
+	{
+		return;
+	}
 }
 
 void terminal_setcolor(uint8_t color)

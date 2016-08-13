@@ -11,6 +11,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include <arch/i386/gdt.h>
+#include <arch/i386/idt.h>
+#include <kernel/multiboot.h>
 #include <kernel/tty.h>
 
 void kernel_early(void)
@@ -18,7 +21,10 @@ void kernel_early(void)
 	terminal_setup();
 }
 
-void kernel_main(void)
+void kernel_main(uint16_t esp, multiboot_info_t *multiboot_pointer)
 {
-	printf("%c%f\n",1,123.4 );
+	setup_gdt();
+	setup_idt();
+	printf("ESP LOCATION: %x\n", esp );
+	printf("UPPER MEMORY: %x\n", (unsigned int)multiboot_pointer->mem_upper);
 }

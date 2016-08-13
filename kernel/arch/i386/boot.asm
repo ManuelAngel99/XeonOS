@@ -24,7 +24,7 @@ section .multiboot
     dd MBOOT_FLAGS
     dd MBOOT_CHECKSUM
 
-
+BITS 32                                                                    ; We are using 32 code
 ; Set up the start function (Wich is our entry point)
 section .text
     extern kernel_early
@@ -34,13 +34,17 @@ section .text
 global start:function (start.end - start)                                   ; Started is declared as a function symbol with its size size=start.end - start.beggining
 start:
     mov esp, stack_top                                                      ; Set the stack pointer to the top of our stack
-    
+    mov ebp, 0                                                              ; Set a landing point for stack traces
+    cli                                                                     ; Disable interrupts
+
     call kernel_early                                                       ; Init the core kernel code
-    call _init                                                               ; Call global constructors
+    call _init                                                              ; Call global constructors
+    
+    push ebx                                                                ; Push the multiboot header location
+    push esp                                                                ; Pass the stack address
     call kernel_main                                                        ; Call kernel main
 
-    cli                                                                     ; Loop forever
-.hang:
+.hang:                                                                      ; Loop forever
     hlt
     jmp .hang
 

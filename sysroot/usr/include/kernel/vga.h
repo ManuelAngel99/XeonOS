@@ -10,6 +10,10 @@
 #ifndef _K_VGA_H
 #define _K_VGA_H
 
+#ifdef _cplusplus
+    extern "C" {
+#endif
+
 #include <stdint.h>
 
 static const size_t VGA_TERMINAL_HEIGHT = 25;
@@ -54,5 +58,8 @@ static inline uint16_t make_vgaentry(char character, uint8_t color)
 }
 
 
+#ifdef _cplusplus
+}
+#endif
 
 #endif // _K_VGA_H

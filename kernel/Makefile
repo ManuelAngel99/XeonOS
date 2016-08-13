@@ -61,6 +61,10 @@ XeonOS.kernel: $(OBJ_LINK_LIST) $(ARCHDIR)/linker.ld
 %.o: %.asm
 	$(AS) $(ASFLAGS) $< -o $@
 
+%.o: %.S
+	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS)
+
+
 clean:
 	rm -f XeonOS.kernel $(OBJS) $(ALL_OUR_OBJS) *.o */*.o */*/*.o
 

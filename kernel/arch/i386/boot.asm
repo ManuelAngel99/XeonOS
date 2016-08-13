@@ -36,6 +36,7 @@ start:
     mov esp, stack_top                                                      ; Set the stack pointer to the top of our stack
     
     call kernel_early                                                       ; Init the core kernel code
+    call constructors_init                                                               ; Call global constructors
     call kernel_main                                                        ; Call kernel main
 
     cli                                                                     ; Loop forever

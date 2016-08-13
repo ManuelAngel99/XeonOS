@@ -15,7 +15,7 @@ MBOOT_MAGIC         equ 0x1BADB002                                          ; Mu
 MBOOT_FLAGS         equ MBOOT_PAGE_ALIGN | MBOOT_MEM_INFO | MBOOT_GRAPHICS  ; We set the multboot flags so grub knows what modules we will use
 MBOOT_CHECKSUM      equ -(MBOOT_MAGIC + MBOOT_FLAGS)                        ; Check everything was set up properly
 
-STACK_SIKE          equ 0x8000                                              ; Set the stack size to 32 KiB
+STACK_SIKE          equ 2*1024*1024                                         ; Set the stack size to 2 MiB
 
 ; Write the multiboot header data so grub can load us
 section .multiboot
@@ -28,7 +28,7 @@ section .multiboot
 ; Set up the start function (Wich is our entry point)
 section .text
     extern kernel_early
-    extern constructors_init
+    extern _init
     extern kernel_main
 
 global start:function (start.end - start)                                   ; Started is declared as a function symbol with its size size=start.end - start.beggining
@@ -36,7 +36,7 @@ start:
     mov esp, stack_top                                                      ; Set the stack pointer to the top of our stack
     
     call kernel_early                                                       ; Init the core kernel code
-    call constructors_init                                                               ; Call global constructors
+    call _init                                                               ; Call global constructors
     call kernel_main                                                        ; Call kernel main
 
     cli                                                                     ; Loop forever

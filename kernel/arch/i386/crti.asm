@@ -8,15 +8,15 @@
 ;
 
 section .init
-global constructors_init:function (constructors_init.end - constructors_init)
-constructors_init:
+global _init:function
+_init:
 	push ebp
 	mov ebp, esp
 .end:
 
 section .fini
-global fini:function (fini.end - fini)
-fini:
+global _fini:function
+_fini:
 	push ebp
 	mov ebp, esp
 .end:

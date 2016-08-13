@@ -127,11 +127,13 @@ no_error_code_interrupt_handler 20
     %assign intnum intnum + 1
 %endrep
 
-%assign intnum 32   ; first user defined interrupt
-%rep 256 - intnum
+%assign intnum 32   ; irq interrupts
+%rep 48 - intnum
     irq intnum
     %assign intnum intnum + 1
 %endrep
+
+
 
 ;
 ; -------------> Define a table of interrupt handlers for C code to use <---------------
@@ -145,6 +147,6 @@ interrupt_handler_table:
     dd  interrupt_handler_ %+ intnum    ; Write the interrupt_handler_X address to the binary
     %assign intnum intnum + 1
 %endrep
-%rep 256 - intnum
+%rep 48 - intnum
     dd irq_handler_%+ intnum            ; Write the irq_handler_X address to the binart
 %endrep

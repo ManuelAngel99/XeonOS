@@ -39,13 +39,6 @@ struct InterruptDescriptorPointer
 	uint32_t base;	//The address of the first IDT entry
 }__attribute__((packed));
 
-struct stack_state
-{
-	uint32_t ds;										// Saved data segment
-	uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;  // Pushed by 'pusha' 
-	uint32_t interrupt_number ,error_code;			// Pushed in the interrupt handler
-	uint32_t eip, cs, eflags;							// Pushed by the processor
-}__attribute__((packed));
 
 struct InterruptDescriptorTableEntry idt[256];
 struct InterruptDescriptorPointer idt_pointer;

@@ -132,14 +132,11 @@ void new_line(void)
 
 void scroll_up(size_t number_of_lines)
 {
-	for(size_t index = 0; index < VGA_TERMINAL_WIDTH * ( VGA_TERMINAL_HEIGHT - number_of_lines ); index++)
-	{
-		terminal_buffer[index] = terminal_buffer[index + VGA_TERMINAL_WIDTH * number_of_lines];
-	}
-	for(size_t i = 1; i < number_of_lines + 1; i++)
-	{
-		terminal_clear_line( VGA_TERMINAL_HEIGHT - i);
-	}
+
+	for(size_t index = 0; index < VGA_TERMINAL_WIDTH * (VGA_TERMINAL_HEIGHT - 1) ; index++)
+		terminal_buffer[index] = terminal_buffer[index + VGA_TERMINAL_WIDTH*number_of_lines];
+	for(size_t j = 1; j <= number_of_lines; j++)
+		terminal_clear_line(VGA_TERMINAL_HEIGHT - j );
 }
 
 void terminal_setcolor(uint8_t color)

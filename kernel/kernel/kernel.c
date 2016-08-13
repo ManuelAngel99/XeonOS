@@ -20,6 +20,5 @@ void kernel_early(void)
 
 void kernel_main(void)
 {
-	putchar('c');
-	printf("ITS ALIVE\nI MEAN, ITS ALIVE!%d",12);
+	printf("%c%f\n",1,123.4 );
 }

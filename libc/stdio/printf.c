@@ -68,14 +68,17 @@ int printf(const char* restrict format, ...)
 				case 'c':
 					c = va_arg(parameters, int);
 					print( &c, sizeof(c));
+					format++;
 				break;
 
 				case 'f':
 					print_double(va_arg(parameters, double));
+					format++;
 
 				case 's':
 					string = va_arg(parameters, char*);
 					print( string, strlen(string) );
+					format++;
 				break;
 
 				case '%':

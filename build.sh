@@ -5,5 +5,3 @@ set -e
 for PROJECT in $PROJECTS; do
   DESTDIR="$PWD/sysroot" $MAKE -C $PROJECT install
 done
-
-read a

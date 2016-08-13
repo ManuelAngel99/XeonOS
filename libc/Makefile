@@ -26,26 +26,12 @@ CFLAGS:=$(CFLAGS) $(ARCH_CFLAGS)
 CPPFLAGS:=$(CPPFLAGS) $(ARCH_CPPFLAGS)
 LIBK_CFLAGS:=$(LIBK_CFLAGS) $(KERNEL_ARCH_CFLAGS)
 LIBK_CPPFLAGS:=$(LIBK_CPPFLAGS) $(KERNEL_ARCH_CPPFLAGS)
- 
+
+TEST:=
+
 FREEOBJS:=\
 $(ARCH_FREEOBJS) \
-stdio/printf.o \
-stdio/putchar.o \
-stdio/puts.o \
-math/ceil.o \
-math/floor.o \
-math/pow.o \
-math/round.o \
-math/modf.o \
-math/precise_round.o \
-stdlib/abort.o \
-stdlib/itoa.o \
-string/memcmp.o \
-string/memcpy.o \
-string/memmove.o \
-string/memset.o \
-string/reverse.o \
-string/strlen.o \
+$(patsubst %.c, %.o, $(wildcard */*.c))\
  
 HOSTEDOBJS:=\
 $(ARCH_HOSTEDOBJS) \

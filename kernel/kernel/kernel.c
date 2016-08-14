@@ -11,9 +11,9 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include <arch/i386/multiboot.h>
 #include <arch/i386/gdt.h>
-#include <arch/i386/idt.h>
-#include <kernel/multiboot.h>
+#include <arch/i386/interrupts.h>
 #include <kernel/tty.h>
 #include <arch/i386/timer.h>
 

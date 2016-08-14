@@ -6,7 +6,7 @@
 * File: idt.c
 * Description: Implements the functions needed to setup the idt
 */
-#include <arch/i386/idt.h>
+#include <arch/i386/interrupts.h>
 #include <kernel/portio.h>
 #include <stddef.h>
 #include <stdint.h>

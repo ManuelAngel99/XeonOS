@@ -60,4 +60,14 @@ void uninstall_irq_handler(size_t irq_number);
 void exception_handler(struct stack_state stack);
 void irq_handler(struct stack_state stack);
 
+inline void disable_interrupts(void)
+{
+    __asm__ __volatile__("cli");
+}
+
+inline void enable_interrupts(void)
+{
+    __asm__ __volatile__("sti");
+}
+
 #endif // INTERRUPTS_H

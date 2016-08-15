@@ -26,6 +26,7 @@ common_interrupt_handler:				; All the interrupt handlers will have this in comm
     mov gs, ax
 
     call exception_handler
+    hlt
 
     pop eax                             ; Get the orginal data segment descriptor back
     mov ds, ax
@@ -149,4 +150,5 @@ interrupt_handler_table:
 %endrep
 %rep 48 - intnum
     dd irq_handler_%+ intnum            ; Write the irq_handler_X address to the binart
+    %assign intnum intnum + 1
 %endrep

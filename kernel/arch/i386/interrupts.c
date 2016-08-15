@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-void *irq_routines[16] =
+static void *irq_routines[16] =
 {
     0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0

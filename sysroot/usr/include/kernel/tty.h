@@ -29,11 +29,14 @@ void terminal_writestring(const char* string);
 
 void terminal_clear_screen(void);
 void terminal_clear_line(size_t line_number);
-void scroll_up(size_t number_of_lines);
+void scroll_up(void);
 
 void terminal_setcolor(uint8_t color);
 uint8_t terminal_getcolor(void);
 void terminal_gotoxy(size_t x, size_t y);
+
+
+void update_cursor(void);
 
 #ifdef _cplusplus
 }

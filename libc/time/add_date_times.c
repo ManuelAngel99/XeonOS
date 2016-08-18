@@ -8,7 +8,7 @@
 */
 #include <time.h>
 
-struct DateTime add_date_times(struct DateTime first_date, struct DateTime second_date)
+DateTime_t add_date_times(DateTime_t first_date, DateTime_t second_date)
 {
 	//Format the dates before adding them
 	format_date_time(&first_date);

@@ -8,7 +8,7 @@
 */
 #include <time.h>
 
-struct DateTime add_seconds_to_date(struct DateTime* target_date_time, unsigned int seconds)
+DateTime_t add_seconds_to_date(DateTime_t* target_date_time, unsigned int seconds)
 {
 	target_date_time->second += seconds;
 	format_date_time(target_date_time);

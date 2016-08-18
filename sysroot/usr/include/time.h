@@ -13,13 +13,13 @@
 #include <stdbool.h>
 
 #define CURRENT_CENTURY 21
-#define HOUR_ADJUST - 4
+#define HOUR_ADJUST 2
 
 #ifdef _cplusplus
 	extern "C" {
 #endif
 
-struct DateTime
+typedef struct DateTime
 {
 	unsigned short second;
 	unsigned short minute;
@@ -29,10 +29,10 @@ struct DateTime
 	unsigned short year;
 }DateTime_t;
 
-struct DateTime add_date_times(struct DateTime, struct DateTime);
-struct DateTime format_date_time(struct DateTime*);
-void clear_date_time(struct DateTime*);
-struct DateTime add_seconds_to_date(struct DateTime*, unsigned int);
+DateTime_t add_date_times(DateTime_t, DateTime_t);
+DateTime_t format_date_time(DateTime_t*);
+DateTime_t add_seconds_to_date(DateTime_t*, unsigned int);
+void clear_date_time(DateTime_t*);
 
 inline bool is_leap_year(unsigned int year)
 {

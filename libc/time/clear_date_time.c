@@ -8,7 +8,7 @@
 */
 #include <time.h>
 
-void clear_date_time(struct DateTime* date_time_to_clear)
+void clear_date_time(DateTime_t* date_time_to_clear)
 {
 	date_time_to_clear->second = 0;
 	date_time_to_clear->minute = 0;

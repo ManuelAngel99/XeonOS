@@ -9,7 +9,7 @@
 
 #include <time.h>
 
-struct DateTime format_date_time(struct DateTime* date_to_fix)
+DateTime_t format_date_time(DateTime_t* date_to_fix)
 {
 	if(date_to_fix->second >= 60)
 	{

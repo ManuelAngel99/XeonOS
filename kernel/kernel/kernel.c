@@ -12,11 +12,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include <arch/i386/multiboot.h>
-#include <arch/i386/gdt.h>
-#include <arch/i386/interrupts.h>
+#include <arch/x86/multiboot.h>
+#include <arch/x86/timers.h>
+#include <arch/x86/acpi.h>
+#include <arch/x86/system.h>
+#include <devices/keyboard.h>
 #include <kernel/tty.h>
-#include <arch/i386/timers.h>
+#include <kernel/portio.h>
 
 void kernel_early(void)
 {
@@ -25,17 +27,20 @@ void kernel_early(void)
 
 void kernel_main(uint16_t esp, multiboot_info_t *multiboot_pointer)
 {
+	find_tables();
 	setup_gdt();
-	setup_idt();
+	setup_interrupts();
 	install_pit();
 	install_rtc();
-	printf("XeonOS -> Checking settings:\n");
-	printf("\tESP LOCATION: %x\n", esp );
-	printf("\tUPPER MEMORY: %x\n", (unsigned int)multiboot_pointer->mem_upper);
-	while(true)
-	{
-		terminal_gotoxy(62,0);
-		printf("%d:%d:%d %d/%d/%d ", current_date.hour, current_date.minute, current_date.second,
-			 	current_date.day, current_date.month, current_date.year);
+	install_keyboard();
+	detect_cpu_family();
+
+	printf("XeonOS - 2016\n");
+    printf("ESP POINTER LOCATION: %x\n", esp);
+    printf("MEMORY UP: %x\n", (int)multiboot_pointer->mem_lower);
+	while(true) {
+	    char c = (char) keyboard_getch();
+		printf("%c", c);
 	}
+
 }

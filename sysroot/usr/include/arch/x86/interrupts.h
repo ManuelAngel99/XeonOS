@@ -62,7 +62,7 @@ void irq_set_mask(uint8_t irq);
 void irq_clear_mask(uint8_t irq);
 
 
-void install_irq_handler(size_t irq_number, void (*)(StackState_t stack));
+void install_irq_handler(size_t irq_number, void (*)(StackState_t *stack));
 void uninstall_irq_handler(size_t irq_number);
 
 void exception_handler(StackState_t stack);

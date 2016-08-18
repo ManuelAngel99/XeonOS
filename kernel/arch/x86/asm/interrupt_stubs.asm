@@ -74,7 +74,7 @@ common_irq_handler:
 global interrupt_handler_%1
 interrupt_handler_%1:
     cli                                 ; Clear interrupts
-    push    dword %1                    ; Push the interrupt number
+    push    %1                    ; Push the interrupt number
     jmp     common_interrupt_handler    ; Jump to the generic handler
 %endmacro
 
@@ -83,7 +83,7 @@ interrupt_handler_%1:
 global interrupt_handler_%1
 interrupt_handler_%1:
    push    dword 0                     ; push 0 as error code
-   push    dword %1                    ; push the interrupt number
+   push    %1                          ; push the interrupt number
    jmp     common_interrupt_handler    ; jump to the common handler
 %endmacro
 
@@ -92,7 +92,7 @@ global irq_handler_%1:
 irq_handler_%1:
     cli                                 ; clears interrupts
     push dword 0                        ;
-    push dword %1                       ;
+    push %1                             ;
     jmp  common_irq_handler
 %endmacro
 

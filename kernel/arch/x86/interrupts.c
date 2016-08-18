@@ -179,8 +179,8 @@ void irq_handler(StackState_t stack)
 {
     if(irq_routines[stack.interrupt_number - 32])
     {
-        void (*handler)(StackState_t) = irq_routines[stack.interrupt_number - 32];  //Void function pointer
-        handler(stack);
+        void (*handler)(StackState_t*) = irq_routines[stack.interrupt_number - 32];  //Void function pointer
+        handler(&stack);
     }
 	
     if(stack.interrupt_number > 39)
@@ -189,7 +189,7 @@ void irq_handler(StackState_t stack)
 	outport_byte(master_pic_command, 0x20);
 }
 
-void install_irq_handler(size_t irq_number, void (*handler)(StackState_t stack))
+void install_irq_handler(size_t irq_number, void (*handler)(StackState_t *stack))
 {
     if(irq_number < 16)
         irq_routines[irq_number] = handler;

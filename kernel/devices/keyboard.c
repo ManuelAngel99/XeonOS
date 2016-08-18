@@ -20,22 +20,23 @@ static bool shift=false, alt=false, control=false, caps_lock = false, key_presse
 static unsigned char keyboard_buffer[129];
 static volatile unsigned int buffer_end = 0;
 
-unsigned short kbdus_unshifted[] =
+
+unsigned short keyboard_unshifted[] =
 {
     KEY_UNKNOWN, ASCII_ESC, '1', '2',   /* 0x00 - 0x03 */
     '3', '4', '5', '6',                 /* 0x04 - 0x07 */
     '7', '8', '9', '0',                 /* 0x08 - 0x0B */
-    '-', '=', ASCII_BS, '\t',           /* 0x0C - 0x0F */
+    '\'', '¡', ASCII_BS, '\t',           /* 0x0C - 0x0F */
     'q', 'w', 'e', 'r',                 /* 0x10 - 0x13 */
     't', 'y', 'u', 'i',                 /* 0x14 - 0x17 */
-    'o', 'p', '[', ']',                 /* 0x18 - 0x1B */
+    'o', 'p', '`', '+',                 /* 0x18 - 0x1B */
     '\n', KEY_LCTRL, 'a', 's',          /* 0x1C - 0x1F */
     'd', 'f', 'g', 'h',                 /* 0x20 - 0x23 */
-    'j', 'k', 'l', ';',                 /* 0x24 - 0x27 */
-    '\'', '`', KEY_LSHIFT, '\\',        /* 0x28 - 0x2B */
+    'j', 'k', 'l', 'ñ',                 /* 0x24 - 0x27 */
+    '\'', KEY_UNKNOWN, KEY_LSHIFT, 'ç',        /* 0x28 - 0x2B */
     'z', 'x', 'c', 'v',                 /* 0x2C - 0x2F */
     'b', 'n', 'm', ',',                 /* 0x30 - 0x33 */
-    '.', '/', KEY_RSHIFT, KEY_PRINTSCRN, /* 0x34 - 0x37 */
+    '.', '-', KEY_RSHIFT, KEY_PRINTSCRN, /* 0x34 - 0x37 */
     KEY_LALT, ' ', KEY_CAPSLOCK, KEY_F1, /* 0x38 - 0x3B */
     KEY_F2, KEY_F3, KEY_F4, KEY_F5,     /* 0x3C - 0x3F */
     KEY_F6, KEY_F7, KEY_F8, KEY_F9,     /* 0x40 - 0x43 */
@@ -43,24 +44,24 @@ unsigned short kbdus_unshifted[] =
     KEY_KPUP, KEY_KPPGUP, KEY_KPMINUS, KEY_KPLEFT,  /* 0x48 - 0x4B */
     KEY_KPCENTER, KEY_KPRIGHT, KEY_KPPLUS, KEY_KPEND,  /* 0x4C - 0x4F */
     KEY_KPDOWN, KEY_KPPGDN, KEY_KPINSERT, KEY_KPDEL,  /* 0x50 - 0x53 */
-    KEY_SYSREQ, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,  /* 0x54 - 0x57 */
+    KEY_SYSREQ, KEY_UNKNOWN, '<', KEY_UNKNOWN,  /* 0x54 - 0x57 */
 };
 
-unsigned short kbdus_shifted[]={
-    KEY_UNKNOWN, ASCII_ESC, '!', '@',   /* 0x00 - 0x03 */
-    '#', '$', '%', '^',                 /* 0x04 - 0x07 */
-    '&', '*', '(', ')',                 /* 0x08 - 0x0B */
-    '_', '+', ASCII_BS, '\t',           /* 0x0C - 0x0F */
+unsigned short keyboard_shifted[]={
+    KEY_UNKNOWN, ASCII_ESC, '!', '\"',   /* 0x00 - 0x03 */
+    '·', '$', '%', '&',                 /* 0x04 - 0x07 */
+    '/', '(', ')', '=',                 /* 0x08 - 0x0B */
+    '?', '¿', ASCII_BS, '\t',           /* 0x0C - 0x0F */
     'Q', 'W', 'E', 'R',                 /* 0x10 - 0x13 */
     'T', 'Y', 'U', 'I',                 /* 0x14 - 0x17 */
     'O', 'P', '{', '}',                 /* 0x18 - 0x1B */
     '\n', KEY_LCTRL, 'A', 'S',          /* 0x1C - 0x1F */
     'D', 'F', 'G', 'H',                 /* 0x20 - 0x23 */
-    'J', 'K', 'L', ':',                 /* 0x24 - 0x27 */
-    '"', '~', KEY_LSHIFT, '|',          /* 0x28 - 0x2B */
+    'J', 'K', 'L', 'Ñ',                 /* 0x24 - 0x27 */
+    '¨', KEY_UNKNOWN, KEY_LSHIFT, 'Ç',          /* 0x28 - 0x2B */
     'Z', 'X', 'C', 'V',                 /* 0x2C - 0x2F */
-    'B', 'N', 'M', '<',                 /* 0x30 - 0x33 */
-    '>', '?', KEY_RSHIFT, KEY_PRINTSCRN, /* 0x34 - 0x37 */
+    'B', 'N', 'M', ';',                 /* 0x30 - 0x33 */
+    ':', '_', KEY_RSHIFT, KEY_PRINTSCRN, /* 0x34 - 0x37 */
     KEY_LALT, ' ', KEY_CAPSLOCK, KEY_F1, /* 0x38 - 0x3B */
     KEY_F2, KEY_F3, KEY_F4, KEY_F5,     /* 0x3C - 0x3F */
     KEY_F6, KEY_F7, KEY_F8, KEY_F9,     /* 0x40 - 0x43 */
@@ -68,25 +69,25 @@ unsigned short kbdus_shifted[]={
     KEY_KPUP, KEY_KPPGUP, KEY_KPMINUS, KEY_KPLEFT,  /* 0x48 - 0x4B */
     KEY_KPCENTER, KEY_KPRIGHT, KEY_KPPLUS, KEY_KPEND,  /* 0x4C - 0x4F */
     KEY_KPDOWN, KEY_KPPGDN, KEY_KPINSERT, KEY_KPDEL,  /* 0x50 - 0x53 */
-    KEY_SYSREQ, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,  /* 0x54 - 0x57 */
+    KEY_SYSREQ, KEY_UNKNOWN, '>', KEY_UNKNOWN,  /* 0x54 - 0x57 */
 };
 
-unsigned short kbdus_caps[] =
+unsigned short keyboard_caps[] =
 {
     KEY_UNKNOWN, ASCII_ESC, '1', '2',   /* 0x00 - 0x03 */
     '3', '4', '5', '6',                 /* 0x04 - 0x07 */
     '7', '8', '9', '0',                 /* 0x08 - 0x0B */
-    '-', '=', ASCII_BS, '\t',           /* 0x0C - 0x0F */
+    '\'', '¡', ASCII_BS, '\t',           /* 0x0C - 0x0F */
     'Q', 'W', 'E', 'R',                 /* 0x10 - 0x13 */
     'T', 'Y', 'U', 'I',                 /* 0x14 - 0x17 */
-    'O', 'P', '[', ']',                 /* 0x18 - 0x1B */
+    'O', 'P', '`', '+',                 /* 0x18 - 0x1B */
     '\n', KEY_LCTRL, 'A', 'S',          /* 0x1C - 0x1F */
     'D', 'F', 'G', 'H',                 /* 0x20 - 0x23 */
-    'J', 'K', 'L', ';',                 /* 0x24 - 0x27 */
-    '\'', '`', KEY_LSHIFT, '\\',        /* 0x28 - 0x2B */
+    'J', 'K', 'L', 'Ñ',                 /* 0x24 - 0x27 */
+    '\'', KEY_UNKNOWN, KEY_LSHIFT, 'Ç',        /* 0x28 - 0x2B */
     'Z', 'X', 'C', 'V',                 /* 0x2C - 0x2F */
     'B', 'N', 'M', ',',                 /* 0x30 - 0x33 */
-    '.', '/', KEY_RSHIFT, KEY_PRINTSCRN, /* 0x34 - 0x37 */
+    '.', '-', KEY_RSHIFT, KEY_PRINTSCRN, /* 0x34 - 0x37 */
     KEY_LALT, ' ', KEY_CAPSLOCK, KEY_F1, /* 0x38 - 0x3B */
     KEY_F2, KEY_F3, KEY_F4, KEY_F5,     /* 0x3C - 0x3F */
     KEY_F6, KEY_F7, KEY_F8, KEY_F9,     /* 0x40 - 0x43 */
@@ -94,7 +95,7 @@ unsigned short kbdus_caps[] =
     KEY_KPUP, KEY_KPPGUP, KEY_KPMINUS, KEY_KPLEFT,  /* 0x48 - 0x4B */
     KEY_KPCENTER, KEY_KPRIGHT, KEY_KPPLUS, KEY_KPEND,  /* 0x4C - 0x4F */
     KEY_KPDOWN, KEY_KPPGDN, KEY_KPINSERT, KEY_KPDEL,  /* 0x50 - 0x53 */
-    KEY_SYSREQ, KEY_UNKNOWN, KEY_UNKNOWN, KEY_UNKNOWN,  /* 0x54 - 0x57 */
+    KEY_SYSREQ, KEY_UNKNOWN, '<', KEY_UNKNOWN,  /* 0x54 - 0x57 */
 };
 
 
@@ -193,7 +194,7 @@ void keyboard_handler()
 
 		if( scancode & 0x80) //If a key is released and it was a shit, control ot alt set the mode to false
 		{
-			switch(kbdus_unshifted[scancode -128])
+			switch(keyboard_unshifted[scancode -128])
 			{
 				case KEY_LSHIFT:
 				case KEY_RSHIFT:
@@ -215,7 +216,7 @@ void keyboard_handler()
 		{
 			key_pressed = true;
 			
-			switch(kbdus_unshifted[scancode]) //Check the shift, control, caps lock and alt keyd
+			switch(keyboard_unshifted[scancode]) //Check the shift, control, caps lock and alt keyd
 			{
 				case KEY_CAPSLOCK:
 					caps_lock = !caps_lock;
@@ -236,11 +237,11 @@ void keyboard_handler()
 			if(!control || !alt)
 			{
 				if(shift)
-					character = kbdus_shifted[scancode];
+					character = keyboard_shifted[scancode];
 				else if(caps_lock)
-					character = kbdus_caps[scancode];
+					character = keyboard_caps[scancode];
 				else
-					character = kbdus_unshifted[scancode];
+					character = keyboard_unshifted[scancode];
 			}
 
 			if(buffer_end < 127)

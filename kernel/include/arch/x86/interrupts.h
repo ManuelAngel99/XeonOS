@@ -33,7 +33,7 @@ typedef struct InterruptDescriptorTableEntry
 	uint16_t	function_low;
 	uint16_t	code_selector;
 	uint8_t 	reserved_byte;
-	uint8_t	flags;
+	uint8_t		flags;
 	uint16_t	function_high;	
 }__attribute__((packed)) InterruptDescriptorTableEntry_t;
 
@@ -46,10 +46,12 @@ typedef struct InterruptDescriptorPointer
 typedef struct StackState
 {
 	uint32_t ds;										// Saved data segment
-	uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;  // Pushed by 'pusha' 
+	uint32_t edi, esi, ebp, useless_esp, ebx, edx, ecx, eax;  // Pushed by 'pusha' 
 	uint32_t interrupt_number ,error_code;			// Pushed in the interrupt handler
 	uint32_t eip, cs, eflags;							// Pushed by the processor
 }__attribute__((packed)) StackState_t;
+
+
 
 InterruptDescriptorTableEntry_t idt[256];
 InterruptDescriptorPointer_t idt_pointer;

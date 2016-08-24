@@ -19,9 +19,12 @@
 	extern "C" {
 #endif
 
+void print(const char*, size_t);
 int printf(const char* __restrict, ...);
 int putchar(int);
 int puts(const char*);
+void print_int(long long, size_t);
+void print_double(double);
 
 #ifdef _cplusplus
 }

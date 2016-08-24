@@ -34,16 +34,16 @@ void setup_gdt(void)
     gdt_set_gate(0, 0, 0, 0, 0);
 
     //Kernel mode code
-    gdt_set_gate(1, 0, 0xFFFF, 0x9A, 0xCF);
+    gdt_set_gate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF);
 
     //Kerel mode data
-    gdt_set_gate(2, 0, 0xFFFF, 0x92, 0xCF);
+    gdt_set_gate(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 
     //User mode code
-    gdt_set_gate(3, 0, 0xFFFF, 0xFA, 0xCF);
+    gdt_set_gate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
 
     //User mode data
-    gdt_set_gate(4, 0, 0xFFFF, 0xF2, 0xCF);
+    gdt_set_gate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF);
 
     gdt_pointer.base = sizeof(GlobalDescriptorTableEntry_t) * 5 - 1; // Subsract 1 because sizeof doesn't start from 0
     gdt_pointer.address = (uint32_t)&gdt;

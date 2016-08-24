@@ -146,14 +146,14 @@ void new_line(void)
 void update_cursor(void)
 {
 	uint16_t position = ( cursor_y * VGA_TERMINAL_WIDTH ) + cursor_x;
+	//Write high to vga index register
+	outport_byte(0x3D4, 15);
+	outport_byte(0x3D5, (uint8_t)position );
 
 	//Write LOW to vga index register
 	outport_byte(0x3D4, 14);
 	outport_byte(0x3D5, position >> 8 );
 
-	//Write high to vga index register
-	outport_byte(0x3D4, 15);
-	outport_byte(0x3D5, (uint8_t)position );
 
 }
 

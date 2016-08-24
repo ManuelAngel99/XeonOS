@@ -11,7 +11,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-char* itoa(int num, char* str, int base)
+char* itoa(long long num, char* str, int base)
 {
     size_t i = 0;
     bool is_negative = false;
@@ -26,7 +26,7 @@ char* itoa(int num, char* str, int base)
  
     // In standard itoa(), negative numbers are handled only with 
     // base 10. Otherwise numbers are considered unsigned.
-    if (num < 0 && ( base == 10 || base == 'd' ))
+    if (num < 0 && ( base == 10 || base == 'd' || base == 'i'))
     {
     	base = 10;
         is_negative = true;
@@ -48,7 +48,7 @@ char* itoa(int num, char* str, int base)
     // Process individual digits
     while (num != 0)
     {
-        int rem = num % base;
+        long long rem = num % base;
         str[i++] = (rem > 9)? (rem-10) + 'a' : rem + '0';
         num = num/base;
     }

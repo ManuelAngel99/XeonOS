@@ -167,7 +167,6 @@ void exception_handler(StackState_t stack)
 	printf("REGISTER EBX %x\n", (unsigned int)stack.ebx );
 	printf("REGISTER ECX %x\n", (unsigned int)stack.ecx );
 	printf("REGISTER EDX %x\n", (unsigned int)stack.edx );
-	printf("REGISTER ESP %x\n", (unsigned int)stack.esp );
 	printf("REGISTER EBP %x\n", (unsigned int)stack.ebp );
 	printf("REGISTER EDI %x\n", (unsigned int)stack.edi );
 	printf("REGISTER ESI %x\n\n", (unsigned int)stack.esi );

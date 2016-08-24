@@ -25,8 +25,23 @@ void kernel_early(void)
 	terminal_setup();
 }
 
-void kernel_main(uint16_t esp, multiboot_info_t *multiboot_pointer)
+void print_memory_map(multiboot_info_t* multiboot_pointer)
 {
+	printf("\n\t\tMEMORY MAP:\n");
+	multiboot_memory_map_t* grub_memory_map = (multiboot_memory_map_t*)multiboot_pointer->mmap_addr;
+	while(grub_memory_map < (multiboot_memory_map_t*)(multiboot_pointer->mmap_addr + multiboot_pointer->mmap_length))
+	{
+		printf("Base adresses %x ", (uint32_t)(grub_memory_map->addr)/1024);
+		printf(",length %x ", (uint32_t)(grub_memory_map->len)/1024);
+		printf(",memory type %x\n", grub_memory_map->type);
+
+	    grub_memory_map = (multiboot_memory_map_t*) + ( (unsigned int)grub_memory_map + grub_memory_map->size + 4 );
+	}
+}
+
+void kernel_main(uint32_t eax, multiboot_info_t *multiboot_pointer)
+{
+
 	find_tables();
 	setup_gdt();
 	setup_interrupts();
@@ -35,11 +50,19 @@ void kernel_main(uint16_t esp, multiboot_info_t *multiboot_pointer)
 	install_keyboard();
 	detect_cpu_family();
 
+
 	printf("XeonOS - 2016\n");
-    printf("ESP POINTER LOCATION: %x\n", esp);
-    printf("MEMORY UP: %x\n", (int)multiboot_pointer->mem_lower);
+    printf("MULTBOOT MAGIC: %x\n", (int)eax);
+    printf("MULTBOOT FLAGS: %x\n", (int)multiboot_pointer->flags);
+    printf("MEMORY UP:\t %x\n", (int)multiboot_pointer->mem_upper);
+    printf("MEMORY LOW:\t %x\n", (int)multiboot_pointer->mem_lower);
+
+    print_memory_map(multiboot_pointer);
+
+    char c;
+
 	while(true) {
-	    char c = (char) keyboard_getch();
+	    c = (char) keyboard_getch();
 		printf("%c", c);
 	}
 

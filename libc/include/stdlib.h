@@ -19,6 +19,8 @@
 __attribute__((__noreturn__))
 void abort(void);				//__noreturn__ that means that the function won't ever returnn
 char* itoa(long long, char*, int);
+void* malloc(unsigned int);
+void free(void*);
 
 #ifdef _cplusplus
 }

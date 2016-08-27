@@ -130,11 +130,13 @@ void setup_physical_memory_map(uint32_t total_kbytes, physical_address bitmaps_s
 	memset(physical_memory.super_blocks, 0xF, physical_memory.total_super_blocks);
 	memset(physical_memory.mega_blocks,  0xF, physical_memory.total_mega_blocks);
 	memset(physical_memory.hyper_blocks, 0xF, physical_memory.total_hyper_blocks);
-
 }
 
 void physical_memory_free_region(physical_address base, size_t size)
 {
+	if(size == 0)
+		return;
+	
 	uint32_t align  = base / PHYSICAL_BLOCK_SIZE;
 
 	for (uint32_t i = 0; i < (size/PHYSICAL_BLOCK_SIZE); i++, align++)
@@ -152,6 +154,9 @@ void physical_memory_free_region(physical_address base, size_t size)
 
 void physical_memory_alloc_region(physical_address base, size_t size)
 {
+	if(size == 0)
+		return;
+
 	uint32_t align  = base / PHYSICAL_BLOCK_SIZE;
 
 	for (uint32_t i = 0; i < (size/PHYSICAL_BLOCK_SIZE); i++, align++)
@@ -173,6 +178,9 @@ void* physical_memory_alloc_block(void)
 		if(frame != -1)
 		{
 			physical_memory_map_set_used(frame, physical_memory.blocks);
+			physical_memory.used_blocks++;
+			physical_memory_update_bitmaps( frame );
+			return ( (void*) (frame * PHYSICAL_BLOCK_SIZE ));
 		}
 	}
 	return NULL;
@@ -181,19 +189,32 @@ void* physical_memory_alloc_block(void)
 void* physical_memory_alloc_blocks(size_t size)
 {
 	if( physical_memory_get_free_block_count() > size + 1)
+	{
+		int starting_frame = physical_memory_find_first_free_chain(size);
+		if(starting_frame != -1)
+		{
+			physical_memory_alloc_region(starting_frame*PHYSICAL_BLOCK_SIZE, size);
+			physical_memory.used_blocks++;
 
+			return ((void*) (starting_frame * PHYSICAL_BLOCK_SIZE));
+		}
+	}
 
 	return NULL;
 }
 
 void physical_memory_free_block(void* address)
 {
-
+	int frame = (physical_address)address / PHYSICAL_BLOCK_SIZE;
+	physical_memory_map_set_free(frame, physical_memory.blocks);
+	physical_memory.used_blocks--;
+	physical_memory_update_bitmaps(frame);
 }
 
 void physical_memory_free_blocks(void* address, size_t size)
 {
-
+	physical_memory_free_region(address, size);
+	physical_memory.used_blocks--;
 }
 
 

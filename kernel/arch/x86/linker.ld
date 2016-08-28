@@ -30,4 +30,5 @@ SECTIONS
 		*(.bss)
 		*(.bootstrap_stack)
 	}
+	end_of_kernel = .;
 }

@@ -23,7 +23,7 @@
 
 #define PAGE_DIRECTORY_INDEX(x) (((x) >> 22) & 0x3ff)
 #define PAGE_TABLE_INDEX(x) (((x) >> 12) & 0x3ff)
-#define PAGE_GET_PHYSICAL_ADDRESS(x) (*x & ~0xfff)
+#define PAGE_GET_physical_address_t(x) (*x & ~0xfff)
 
 #define PAGE_TABLE_ADDRESS_SIZE	0x400000
 
@@ -71,10 +71,10 @@ typedef uint32_t page_table_entry;
 
 extern void add_attribute_to_pte(page_table_entry* entry, uint32_t attribute);   // Set an attributerto a page entry
 extern void del_attribute_from_pte(page_table_entry* entry, uint32_t attribute); // Remove an attributerto from page entry
-extern void set_pte_frame(page_table_entry* entry, physical_address);            // Sets gtame to a page entry
+extern void set_pte_frame(page_table_entry* entry, physical_address_t);            // Sets gtame to a page entry
 extern bool pte_is_present(page_table_entry entry);                              // Check if a page is present
 extern bool pte_is_writable(page_table_entry entry);                             // Check if a page is writteable
-extern physical_address page_table_entry_pfn(page_table_entry entry);            // Get the page frame number from an entry
+extern physical_address_t page_table_entry_pfn(page_table_entry entry);            // Get the page frame number from an entry
 
 
 /*
@@ -112,12 +112,12 @@ typedef uint32_t page_directory_entry;
 
 extern void add_attribute_to_pde(page_directory_entry* entry, uint32_t attribute);   // Set an attributerto a page directory entry
 extern void del_attribute_from_pde(page_directory_entry* entry, uint32_t attribute); // Remove an attributerto from page directory entry
-extern void set_pde_frame(page_directory_entry* entry, physical_address);            // Sets frame to a page entry
+extern void set_pde_frame(page_directory_entry* entry, physical_address_t);            // Sets frame to a page entry
 extern bool pde_is_present(page_directory_entry entry);                              // Check if a page is present
 extern bool pde_is_user(page_directory_entry entry);                                 // Check if a page is in user mode
 extern bool pde_is_4mb(page_directory_entry entry);                                  // Check if a page is 4mb in size
 extern bool pde_is_writable(page_directory_entry entry);                      	     // Check if a page is writteable
-extern physical_address page_directory_entry_pfn(page_directory_entry entry);        // Get the page frame number from an entry
+extern physical_address_t page_directory_entry_pfn(page_directory_entry entry);        // Get the page frame number from an entry
 extern void pde_enable_global(page_directory_entry entry);                           // Make a page globaly avaliable
 
 

@@ -11,8 +11,9 @@
 #ifndef PHYSICAL_MEMORY_H
 #define PHYSICAL_MEMORY_H
 
-#include <stdint.h>
 #include <arch/x86/multiboot.h>
+#include <bitmap.h>
+#include <stdint.h>
 #include <stddef.h>
 
 #ifdef _cplusplus
@@ -29,7 +30,7 @@
 
 
 //An alias for uint32_t to refer to the physical memory adresses
-typedef uint32_t physical_address;
+typedef uint32_t physical_address_t;
 
 typedef struct memory_map
 {
@@ -38,23 +39,20 @@ typedef struct memory_map
 	uint32_t total_blocks;		    // The maximum number of blocks
 	uint32_t total_super_blocks;    // The maximum number of super blocks
 	uint32_t total_mega_blocks;		// The maximum number of mega blocks
-	                          		
-	uint32_t* blocks;				// A block is 4096 bytes
-	uint32_t* super_blocks;			// A super block is 32 blocks
-	uint32_t* mega_blocks;			// A mega block is 32 super blocks
+	
+	bitmap_t blocks;
+
 }memory_map_t;
 
+void test();
 
 void setup_pmm(multiboot_info_t* multiboot_pointer);
 
-void physical_memory_init_region(physical_address base, size_t size);
-void physical_memory_deinit_region(physical_address base, size_t size);
+void physical_memory_init_region(physical_address_t base, size_t size);
+void physical_memory_deinit_region(physical_address_t base, size_t size);
 
-void* physical_memory_alloc_block(void);
-void* physical_memory_alloc_blocks(size_t size);
-
-void physical_memory_free_block(void* address);
-void physical_memory_free_blocks(void* address, size_t size);
+void* physical_memory_alloc(size_t number_of_blocks);
+void physical_memory_free(void* address, size_t number_of_blocks);
 
 
 size_t physical_memory_get_memory_size(void);

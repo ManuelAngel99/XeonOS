@@ -36,26 +36,13 @@ void kernel_main(uint32_t eax, multiboot_info_t *multiboot_pointer)
 	setup_interrupts();
 	install_pit();
 	install_rtc();
+	setup_pmm(multiboot_pointer);
 	install_keyboard();
-	detect_cpu_family();
 
 
 	printf("XeonOS - 2016\n");
-    printf("MULTBOOT MAGIC: %x\n", (int)eax);
-    printf("MULTBOOT FLAGS: %x\n", (int)multiboot_pointer->flags);
-    printf("MEMORY UP:\t %x\n", (int)multiboot_pointer->mem_upper);
-    printf("MEMORY LOW:\t %x\n", (int)multiboot_pointer->mem_lower);
-
-    setup_pmm(multiboot_pointer);
 
     char c;
-
-	for (size_t i = 0; i < 10; i++)
-	{
-
-		physical_memory_alloc_blocks(5);
-		
-	}
 	while(true) {
 	    c = (char) keyboard_getch();
 		printf("%c", c);

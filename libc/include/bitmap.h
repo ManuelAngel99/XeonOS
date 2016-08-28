@@ -15,7 +15,7 @@
 #define BITMAP_REMAINER 31
 
 #define BITMAP_EMPTY_PAGE 0
-#define BITMAP_FULL_PAGE 0xfffffff
+#define BITMAP_FULL_PAGE 0xffffffff
 
 typedef struct bitmap
 {
@@ -50,7 +50,7 @@ static inline bool bitmap_get_bit(bitmap_t* bitmap, size_t element_number)
 }
 
 size_t bitmap_size(size_t);
-void bitmap_init(bitmap_t*, size_t, void *);
+void bitmap_initialize(bitmap_t*, size_t, void *);
 void bitmap_set_range(bitmap_t*, size_t, size_t);
 void bitmap_clear_range(bitmap_t*, size_t, size_t);
 

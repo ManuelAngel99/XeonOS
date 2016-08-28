@@ -13,11 +13,8 @@
 
 void bitmap_print_page(bitmap_t* bitmap, size_t page)
 {
-    assert(page < (bitmap->elements_count / BITMAP_UNITS) );
+    assert(page < (bitmap->elements_count) );
     
-    if(page >= (bitmap->elements_count / BITMAP_UNITS) )
-        return;
-        
     for(size_t i = 0; i < BITMAP_UNITS; i ++ )
     {
         printf("%d",bitmap_get_bit( bitmap, page * BITMAP_UNITS + i));

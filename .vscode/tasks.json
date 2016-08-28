@@ -4,6 +4,6 @@
     "version": "0.1.0",
     "command": "bash",
     "isShellCommand": true,
-    "args": ["qemu.sh"],
+    "args": ["virtualbox.sh"],
     "showOutput": "always"
 }

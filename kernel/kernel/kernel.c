@@ -15,6 +15,7 @@
 #include <arch/x86/multiboot.h>
 #include <arch/x86/timers.h>
 #include <arch/x86/acpi.h>
+#include <arch/x86/physical_memory.h>
 #include <arch/x86/system.h>
 #include <devices/keyboard.h>
 #include <kernel/tty.h>
@@ -25,19 +26,7 @@ void kernel_early(void)
 	terminal_setup();
 }
 
-void print_memory_map(multiboot_info_t* multiboot_pointer)
-{
-	printf("\n\t\tMEMORY MAP:\n");
-	multiboot_memory_map_t* grub_memory_map = (multiboot_memory_map_t*)multiboot_pointer->mmap_addr;
-	while(grub_memory_map < (multiboot_memory_map_t*)(multiboot_pointer->mmap_addr + multiboot_pointer->mmap_length))
-	{
-		printf("Base adresses %x ", (uint32_t)(grub_memory_map->addr)/1024);
-		printf(",length %x ", (uint32_t)(grub_memory_map->len)/1024);
-		printf(",memory type %x\n", grub_memory_map->type);
 
-	    grub_memory_map = (multiboot_memory_map_t*) + ( (unsigned int)grub_memory_map + grub_memory_map->size + 4 );
-	}
-}
 
 void kernel_main(uint32_t eax, multiboot_info_t *multiboot_pointer)
 {
@@ -57,10 +46,16 @@ void kernel_main(uint32_t eax, multiboot_info_t *multiboot_pointer)
     printf("MEMORY UP:\t %x\n", (int)multiboot_pointer->mem_upper);
     printf("MEMORY LOW:\t %x\n", (int)multiboot_pointer->mem_lower);
 
-    print_memory_map(multiboot_pointer);
+    setup_pmm(multiboot_pointer);
 
     char c;
 
+	for (size_t i = 0; i < 10; i++)
+	{
+
+		physical_memory_alloc_blocks(5);
+		
+	}
 	while(true) {
 	    c = (char) keyboard_getch();
 		printf("%c", c);

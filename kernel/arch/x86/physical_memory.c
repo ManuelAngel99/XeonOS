@@ -27,105 +27,17 @@ static void physical_memory_update_bitmaps(uint32_t reference_block);
 void physical_memory_free_region(physical_address base, size_t size);
 void physical_memory_alloc_region(physical_address base, size_t size);
 
-inline static void physical_memory_map_set_used(uint32_t bit, uint32_t* target)
-{
-	target[ bit / LEVEL_MULTIPLICATOR  ] |= (1 << (bit % LEVEL_MULTIPLICATOR ) );
-}
-
-inline static void physical_memory_map_set_free(uint32_t bit, uint32_t* target)
-{
-	target[ bit / LEVEL_MULTIPLICATOR  ] &= ~(1 << (bit % LEVEL_MULTIPLICATOR ) );
-}
-
-static bool physical_memory_map_check_if_used(uint32_t starting_bit, uint32_t count)
-{
-	if( ( LEVEL_MULTIPLICATOR  - ((int32_t)starting_bit%32 + (int32_t)count) ) < 0)
-	{
-        return (__builtin_ctz(physical_memory.blocks[starting_bit/ LEVEL_MULTIPLICATOR  +1]) + __builtin_clz(physical_memory.blocks[starting_bit/ LEVEL_MULTIPLICATOR ])) < (int32_t)count;
-	}
-    return ( physical_memory.blocks[starting_bit/ LEVEL_MULTIPLICATOR ] & ( ((1<<(count)) -1) << starting_bit % LEVEL_MULTIPLICATOR ) ) != 0;
-}
-
-static int32_t physical_memory_find_first_free_block(void)
-{
-    uint32_t  b, c, d, j, buffer = 0;
-	for( b = 0 ; b <= physical_memory.total_mega_blocks; b++)
-		if(physical_memory.mega_blocks[b] != 0xFFFFFFFF)
-			for( c = b * LEVEL_MULTIPLICATOR ; c <= physical_memory.total_super_blocks; c++)
-				if(physical_memory.super_blocks[c] != 0xFFFFFFFF)
-					for ( d = c * LEVEL_MULTIPLICATOR ; d < physical_memory.total_blocks; d++)
-						if(physical_memory.blocks[d] != 0xFFFFFFFF)								// If there is a free bit	
-						{
-							buffer = ~physical_memory.blocks[d] & (physical_memory.blocks[d]+1);	// Isolate the first free bit
-								for(j = 0; buffer !=1; j++)
-									buffer = buffer >> 1;								// Right shift buffer until it's 0
-							return ( d * LEVEL_MULTIPLICATOR  + j);
-						}
-                        
-    return -1;
-}
-
-static int32_t physical_memory_find_first_free_chain(uint32_t chain_size)
-{
-    uint32_t starting_block, b, c, d, j;
-    
-	if( chain_size == 0)                                                                                // You cannot allocate 0 pages!
-		return -1;
-	else if(chain_size == 1)                                                                            // Use the find first free block method
-		return physical_memory_find_first_free_block();
-    
-	for( b = 0; b <= physical_memory.total_mega_blocks; b++)
-		if(physical_memory.mega_blocks[b] != 0xFFFFFFFF)
-			for( c = b * LEVEL_MULTIPLICATOR ; c <= physical_memory.total_super_blocks; c++)
-				if(physical_memory.super_blocks[c] != 0xFFFFFFFF)
-					for ( d = c * LEVEL_MULTIPLICATOR ; d < physical_memory.total_blocks; d++)
-						if(physical_memory.blocks[d] != 0xFFFFFFFF)								// If there is a free bit	
-						{
-							for(j = 0; j < LEVEL_MULTIPLICATOR ; j++)                                             //Test every bit                              
-							{
-								starting_block = LEVEL_MULTIPLICATOR *d + j;
-								if(!physical_memory_map_check_if_used(starting_block, chain_size))
-									return starting_block;
-							}
-
-						}
-                                
-	return -1;
-}
-
-
-static void physical_memory_update_bitmaps(uint32_t reference_block)
-{
-
-	uint32_t index = reference_block / LEVEL_MULTIPLICATOR;
-	if(physical_memory.blocks[index] == 0xFFFFFFFF)
-		physical_memory_map_set_used( index / LEVEL_MULTIPLICATOR, physical_memory.super_blocks );
-	else
-		physical_memory_map_set_free( index / LEVEL_MULTIPLICATOR, physical_memory.super_blocks );
-
-	if(physical_memory.super_blocks[ index / LEVEL_MULTIPLICATOR ] == 0xFFFFFFFF)
-		physical_memory_map_set_used( index / DOUBLE_LEVEL_MULTIPLICATOR, physical_memory.mega_blocks);
-	else
-		physical_memory_map_set_free( index / DOUBLE_LEVEL_MULTIPLICATOR, physical_memory.mega_blocks);
-
-}
 
 static void setup_physical_memory_map(uint32_t total_kbytes, physical_address bitmaps_start)
 {
 	physical_memory.total_memory = total_kbytes;
 
-	physical_memory.total_blocks = total_kbytes/4;
-	physical_memory.total_super_blocks = physical_memory.total_blocks / LEVEL_MULTIPLICATOR ;
-	physical_memory.total_mega_blocks = physical_memory.total_super_blocks / LEVEL_MULTIPLICATOR ;
+	physical_memory.total_blocks = total_kbytes/4; //A page is 4kbytes
 	physical_memory.used_blocks = physical_memory.total_blocks;
 
 	physical_memory.blocks = (uint32_t*) bitmaps_start;
-	physical_memory.super_blocks = (uint32_t*)( physical_memory.blocks + (uint32_t)physical_memory.blocks * sizeof(uint32_t));
-	physical_memory.mega_blocks  = (uint32_t*)( physical_memory.super_blocks + (uint32_t)physical_memory.super_blocks * sizeof(uint32_t));
 
 	memset(physical_memory.blocks,       0xF, physical_memory.total_blocks);			//By default all memory is in use
-	memset(physical_memory.super_blocks, 0xF, physical_memory.total_super_blocks);
-	memset(physical_memory.mega_blocks,  0xF, physical_memory.total_mega_blocks);
 }
 
 static uint32_t get_grub_total_kbytes_of_memory(multiboot_info_t* multiboot_pointer, uint32_t mem_upper)

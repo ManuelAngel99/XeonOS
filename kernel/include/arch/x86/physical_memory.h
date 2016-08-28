@@ -11,8 +11,9 @@
 #ifndef PHYSICAL_MEMORY_H
 #define PHYSICAL_MEMORY_H
 
-#include <stdint.h>
 #include <arch/x86/multiboot.h>
+#include <bitmap.h>
+#include <stdint.h>
 #include <stddef.h>
 
 #ifdef _cplusplus
@@ -38,10 +39,9 @@ typedef struct memory_map
 	uint32_t total_blocks;		    // The maximum number of blocks
 	uint32_t total_super_blocks;    // The maximum number of super blocks
 	uint32_t total_mega_blocks;		// The maximum number of mega blocks
-	                          		
-	uint32_t* blocks;				// A block is 4096 bytes
-	uint32_t* super_blocks;			// A super block is 32 blocks
-	uint32_t* mega_blocks;			// A mega block is 32 super blocks
+	
+	bitmap_t blocks;
+
 }memory_map_t;
 
 

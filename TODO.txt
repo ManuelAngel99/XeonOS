@@ -3,3 +3,4 @@
 3. int printf() should return the number of printed characters
 3. Implement a truly double precision pow() function
 4. Implement a more elegant way of managing time zones
+5. Make that the getch function doesn't delete previous contents

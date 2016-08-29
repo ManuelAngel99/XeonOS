@@ -41,11 +41,17 @@ void kernel_main(uint32_t eax, multiboot_info_t *multiboot_pointer)
 
 
 	printf("XeonOS - 2016\n");
+	printf("CHECKSUM : %d\n", (int)eax);
 
-    char c;
+	printf("scanf test :");
+	char ch = (char)getchar();
+	printf("result equals \"%c\"", ch);
+
 	while(true) {
-	    c = (char) keyboard_getch();
-		printf("%c", c);
+		if(kbhit())
+		{
+			printf("%c", keyboard_getch());
+		}
 	}
 
 }

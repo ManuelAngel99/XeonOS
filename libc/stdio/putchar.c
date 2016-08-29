@@ -4,7 +4,7 @@
 * Created: 2016-08-11 20:00:42
 * 
 * File: putchar.c
-* Description:
+* Description: Implements the function putchar wich outputs a single character to the screen
 */
 #include <stdio.h>
 

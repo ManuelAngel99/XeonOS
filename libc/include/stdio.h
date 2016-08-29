@@ -26,6 +26,11 @@ int puts(const char*);
 void print_int(long long, size_t);
 void print_double(double);
 
+int getchar(void);
+int getch(void);
+int getche(void);
+int scanf(const char* __restrict, ...);
+
 #ifdef _cplusplus
 }
 #endif

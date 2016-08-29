@@ -19,7 +19,7 @@
 static memory_map_t physical_memory;
 
 static uint32_t get_grub_total_kbytes_of_memory(multiboot_info_t* multiboot_pointer, uint32_t mem_upper);
-static void setup_physical_memory_map(uint32_t total_kbytes, physical_address_t bitmap_start);
+static void setup_physical_memory_map(uint32_t total_kbytes, physical_address_t* bitmap_start);
 
 static uint32_t get_grub_total_kbytes_of_memory(multiboot_info_t* multiboot_pointer, uint32_t mem_upper)
 {
@@ -39,7 +39,7 @@ static uint32_t get_grub_total_kbytes_of_memory(multiboot_info_t* multiboot_poin
 	return total_kbytes;
 }
 
-static void setup_physical_memory_map(uint32_t total_kbytes, physical_address_t bitmap_start)
+static void setup_physical_memory_map(uint32_t total_kbytes, physical_address_t* bitmap_start)
 {
 	//Set the memory size
 	physical_memory.total_memory = total_kbytes;
@@ -58,7 +58,7 @@ void setup_pmm(multiboot_info_t* multiboot_pointer)
 {
 	//End of kernel symbol is defined in the linker.ld
 	extern uint32_t end_of_kernel;
-	physical_address_t bitmap_start = &end_of_kernel;
+	physical_address_t* bitmap_start = (physical_address_t*) &end_of_kernel;
 
 	uint32_t total_kb = get_grub_total_kbytes_of_memory(multiboot_pointer, multiboot_pointer->mem_upper);
 	multiboot_memory_map_t* grub_memory_map = (multiboot_memory_map_t*)multiboot_pointer->mmap_addr;
@@ -81,8 +81,9 @@ void setup_pmm(multiboot_info_t* multiboot_pointer)
 	}
 
 	//Alloc the kernel region and the bitmap region
-	physical_memory_init_region(0x0, &end_of_kernel);
-	physical_memory_init_region(bitmap_start, (sizeof(memory_map_t) + physical_memory.total_blocks) * 8);
+	physical_memory_init_region(0x0, (physical_address_t)&end_of_kernel);
+	physical_memory_init_region((physical_address_t)bitmap_start,
+								(physical_address_t)(sizeof(memory_map_t) + physical_memory.total_blocks) * 8);
 
 	#ifdef NDEBUG
 		printf("TOTAL KB OF MEM: %d \n", total_kb);
@@ -91,13 +92,13 @@ void setup_pmm(multiboot_info_t* multiboot_pointer)
 }
 
 
-void physical_memory_init_region(uint32_t base, uint32_t length)
+void physical_memory_init_region(physical_address_t base, size_t length)
 {
 	bitmap_set_range( &physical_memory.blocks, base /PHYSICAL_BLOCK_SIZE, length/PHYSICAL_BLOCK_SIZE);
 	physical_memory.used_blocks += length/PHYSICAL_BLOCK_SIZE;
 }
 
-void physical_memory_deinit_region(uint32_t base, uint32_t length)
+void physical_memory_deinit_region(physical_address_t base, size_t length)
 {
 	bitmap_clear_range( &physical_memory.blocks, base /PHYSICAL_BLOCK_SIZE, length/PHYSICAL_BLOCK_SIZE);
 	physical_memory.used_blocks -= length/PHYSICAL_BLOCK_SIZE;

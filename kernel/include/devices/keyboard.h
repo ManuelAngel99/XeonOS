@@ -92,21 +92,98 @@ enum keyboard_responses
 	test_error=0xFD
 };
 
-typedef struct key
+enum key_codes
 {
-	bool is_pressed;
-	int16_t regular_print_value;
-	int16_t shifted_print_value;
-	int16_t alt_gr_print_value;
-
-}key_t;
+	KEY_NULL,			//0
+	KEY_BACKSLASH,		//1
+	KEY_1,				//2
+	KEY_2,				//3
+	KEY_3,				//4
+	KEY_4,				//5
+	KEY_5,				//6
+	KEY_6,				//7
+	KEY_7,				//8
+	KEY_8,				//9
+	KEY_9,				//10
+	KEY_0,				//11
+	KEY_QUESTION,		//12
+	KEY_OPEN_QUESTION,	//13
+	KEY_BACKSPACE,		//14
+	KEY_TAB,			//15
+	KEY_Q,				//16
+	KEY_W,				//17
+	KEY_E,				//18
+	KEY_R,				//19
+	KEY_T,				//20
+	KEY_Y,				//21
+	KEY_U,				//22
+	KEY_I,				//23
+	KEY_O,				//24
+	KEY_P,				//25
+	KEY_OPEN_BRACKET,	//26
+	KEY_CLOSE_BRACKED,	//27
+	KEY_ENTER,			//28
+	KEY_CAPS_LOCK,		//29
+	KEY_A,				//30
+	KEY_S,				//31
+	KEY_D,				//32
+	KEY_F,				//33
+	KEY_G,				//34
+	KEY_H,				//35
+	KEY_J,				//36
+	KEY_K,				//37
+	KEY_L,				//38
+	KEY_GNU,			//39
+	KEY_OPEN_BRACE,		//40
+	KEY_CLOSE_BRACE,	//41
+	KEY_LEFT_SHIFT,		//42
+	KEY_GREATER_SMALLER,//43
+	KEY_Z, 				//44
+	KEY_X, 				//45
+	KEY_C, 				//46
+	KEY_V, 				//47
+	KEY_B, 				//48
+	KEY_N, 				//49
+	KEY_M, 				//50
+	KEY_COMMA,			//51
+	KEY_DOT,			//52
+	KEY_UNDERSCORE,		//53
+	KEY_RIGHT_SHIFT,	//54
+	KEY_LEFT_CONTROL,	//55
+	KEY_FUNCTION,		//56
+	KEY_ALT,			//57
+	KEY_SPACEBAR,		//58
+	KEY_ALT_GR,			//59
+	KEY_SUPER,			//60
+	KEY_RIGHT_CLICK, 	//61
+	KEY_RIGHT_CONTROL,	//62
+	KEY_ESC,			//63
+	KEY_F1,				//64
+	KEY_F2, 			//65
+	KEY_F3,	 			//66
+	KEY_F4,				//67
+	KEY_F5,				//68
+	KEY_F6,				//69
+	KEY_F7,				//70
+	KEY_F8, 			//71
+	KEY_F9, 			//72
+	KEY_F10, 			//73
+	KEY_F11, 			//74
+	KEY_F12,			//75
+	KEY_ARROW_LEFT,		//76
+	KEY_ARROW_DOWN,		//77
+	KEY_ARROW_RIGHT,	//78
+	KEY_ARROW_UP		//79
+};
 
 bool install_keyboard(void);
 void disable_keyboard(void);
 
 void keyboard_handler();
 void reset_buffer(void);
-bool kbhit(void);
+
+bool key_is_pressed( unsigned char key_code);
+bool keyboard_get_key_pressed(void);
 uint16_t keyboard_getch(void);
 
 #ifdef _cplusplus

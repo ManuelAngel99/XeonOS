@@ -27,9 +27,12 @@ void print_int(long long, size_t);
 void print_double(double);
 
 int getchar(void);
+int getc(void);
+char* getline(char*, size_t*);
 int getch(void);
-int getche(void);
 int scanf(const char* __restrict, ...);
+char kbhit(void);
+char caps_locked(void);
 
 #ifdef _cplusplus
 }

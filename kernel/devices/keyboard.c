@@ -13,7 +13,6 @@
 #include <kernel/portio.h>
 
 #include <stdbool.h>
-#include <stdio.h>
 
 //Define the special key modifiers
 #define CAPS_KEY 29
@@ -25,25 +24,34 @@ static volatile bool key_pressed, caps_locked;
 static unsigned char keyboard_buffer[129];
 static volatile unsigned int buffer_end = 0;
 
+typedef struct key
+{
+	bool is_pressed;
+	int16_t regular_print_value;
+	int16_t shifted_print_value;
+	int16_t alt_gr_print_value;
+
+}key_t;
+
 static volatile key_t keyboard[105] =
 {
-	{.is_pressed = false, .regular_print_value = -1,   .shifted_print_value = -1,   .alt_gr_print_value = -1},		// -1
-	{.is_pressed = false, .regular_print_value = 'º', .shifted_print_value = 'ª', .alt_gr_print_value = '\\'},	// 1
-	{.is_pressed = false, .regular_print_value = '1', .shifted_print_value = '!', .alt_gr_print_value = '|'},	// 2
-	{.is_pressed = false, .regular_print_value = '2', .shifted_print_value = '"', .alt_gr_print_value = '@'},	// 3
-	{.is_pressed = false, .regular_print_value = '3', .shifted_print_value = '·', .alt_gr_print_value = '#'},	// 4
-	{.is_pressed = false, .regular_print_value = '4', .shifted_print_value = '$', .alt_gr_print_value = '~'},	// 5
-	{.is_pressed = false, .regular_print_value = '5', .shifted_print_value = '%', .alt_gr_print_value = '5'},	// 6
-	{.is_pressed = false, .regular_print_value = '6', .shifted_print_value = '&', .alt_gr_print_value = '6'},	// 7
-	{.is_pressed = false, .regular_print_value = '7', .shifted_print_value = '/', .alt_gr_print_value = '{'},	// 8
-	{.is_pressed = false, .regular_print_value = '8', .shifted_print_value = '(', .alt_gr_print_value = '['},	// 9
-	{.is_pressed = false, .regular_print_value = '9', .shifted_print_value = ')', .alt_gr_print_value = ']'},	// 10
-	{.is_pressed = false, .regular_print_value = '-1', .shifted_print_value = '=', .alt_gr_print_value = '}'},	// 11
-	{.is_pressed = false, .regular_print_value = '\'',.shifted_print_value = '?', .alt_gr_print_value = '\\'},	// 12
+	{.is_pressed = false, .regular_print_value = -1,  .shifted_print_value = -1,  .alt_gr_print_value = -1},		// 0 
+	{.is_pressed = false, .regular_print_value = 'º', .shifted_print_value = 'ª', .alt_gr_print_value = '\\'},		// 1
+	{.is_pressed = false, .regular_print_value = '1', .shifted_print_value = '!', .alt_gr_print_value = '|'},		// 2
+	{.is_pressed = false, .regular_print_value = '2', .shifted_print_value = '"', .alt_gr_print_value = '@'},		// 3
+	{.is_pressed = false, .regular_print_value = '3', .shifted_print_value = '·', .alt_gr_print_value = '#'},		// 4
+	{.is_pressed = false, .regular_print_value = '4', .shifted_print_value = '$', .alt_gr_print_value = '~'},		// 5
+	{.is_pressed = false, .regular_print_value = '5', .shifted_print_value = '%', .alt_gr_print_value = '5'},		// 6
+	{.is_pressed = false, .regular_print_value = '6', .shifted_print_value = '&', .alt_gr_print_value = '6'},		// 7
+	{.is_pressed = false, .regular_print_value = '7', .shifted_print_value = '/', .alt_gr_print_value = '{'},		// 8
+	{.is_pressed = false, .regular_print_value = '8', .shifted_print_value = '(', .alt_gr_print_value = '['},		// 9
+	{.is_pressed = false, .regular_print_value = '9', .shifted_print_value = ')', .alt_gr_print_value = ']'},		// 10
+	{.is_pressed = false, .regular_print_value = '0',.shifted_print_value = '=', .alt_gr_print_value = '}'},		// 11
+	{.is_pressed = false, .regular_print_value = '\'',.shifted_print_value = '?', .alt_gr_print_value = '\\'},		// 12
 	{.is_pressed = false, .regular_print_value = '¡', .shifted_print_value = '¿', .alt_gr_print_value = -1},		// 13
-	{.is_pressed = false, .regular_print_value = '\b',.shifted_print_value = '\b',.alt_gr_print_value = '\b'},	// 14
-	{.is_pressed = false, .regular_print_value = '\t',.shifted_print_value = '\t',.alt_gr_print_value = '\t'},	// 15
-	{.is_pressed = false, .regular_print_value = 'q', .shifted_print_value = 'Q', .alt_gr_print_value = '@'},	// 16
+	{.is_pressed = false, .regular_print_value = '\b',.shifted_print_value = '\b',.alt_gr_print_value = '\b'},		// 14
+	{.is_pressed = false, .regular_print_value = '\t',.shifted_print_value = '\t',.alt_gr_print_value = '\t'},		// 15
+	{.is_pressed = false, .regular_print_value = 'q', .shifted_print_value = 'Q', .alt_gr_print_value = '@'},		// 16
 	{.is_pressed = false, .regular_print_value = 'w', .shifted_print_value = 'W', .alt_gr_print_value = -1},		// 17
 	{.is_pressed = false, .regular_print_value = 'e', .shifted_print_value = 'E', .alt_gr_print_value = -1},		// 18
 	{.is_pressed = false, .regular_print_value = 'r', .shifted_print_value = 'R', .alt_gr_print_value = -1},		// 19
@@ -53,11 +61,11 @@ static volatile key_t keyboard[105] =
 	{.is_pressed = false, .regular_print_value = 'i', .shifted_print_value = 'I', .alt_gr_print_value = -1},		// 23
 	{.is_pressed = false, .regular_print_value = 'o', .shifted_print_value = 'O', .alt_gr_print_value = -1},		// 24
 	{.is_pressed = false, .regular_print_value = 'p', .shifted_print_value = 'P', .alt_gr_print_value = -1},		// 25
-	{.is_pressed = false, .regular_print_value = '`', .shifted_print_value = '^', .alt_gr_print_value = '['},	// 26
-	{.is_pressed = false, .regular_print_value = '+', .shifted_print_value = '*', .alt_gr_print_value = ']'},	// 27
-	{.is_pressed = false, .regular_print_value = '\n',.shifted_print_value = '\n',.alt_gr_print_value = '\n'},	// 28
-	{.is_pressed = false, .regular_print_value = -1,   .shifted_print_value = -1,   .alt_gr_print_value = -1},		// 29
-	{.is_pressed = false, .regular_print_value = 'a', .shifted_print_value = 'A', .alt_gr_print_value = 0},		// 3-1
+	{.is_pressed = false, .regular_print_value = '`', .shifted_print_value = '^', .alt_gr_print_value = '['},		// 26
+	{.is_pressed = false, .regular_print_value = '+', .shifted_print_value = '*', .alt_gr_print_value = ']'},		// 27
+	{.is_pressed = false, .regular_print_value = '\n',.shifted_print_value = '\n',.alt_gr_print_value = '\n'},		// 28
+	{.is_pressed = false, .regular_print_value = -1,  .shifted_print_value = -1,  .alt_gr_print_value = -1},		// 29
+	{.is_pressed = false, .regular_print_value = 'a', .shifted_print_value = 'A', .alt_gr_print_value = 0},			// 30
 	{.is_pressed = false, .regular_print_value = 's', .shifted_print_value = 'S', .alt_gr_print_value = -1},		// 31
 	{.is_pressed = false, .regular_print_value = 'd', .shifted_print_value = 'D', .alt_gr_print_value = -1},		// 32
 	{.is_pressed = false, .regular_print_value = 'f', .shifted_print_value = 'F', .alt_gr_print_value = -1},		// 33
@@ -67,10 +75,10 @@ static volatile key_t keyboard[105] =
 	{.is_pressed = false, .regular_print_value = 'k', .shifted_print_value = 'K', .alt_gr_print_value = -1},		// 37
 	{.is_pressed = false, .regular_print_value = 'l', .shifted_print_value = 'L', .alt_gr_print_value = -1},		// 38
 	{.is_pressed = false, .regular_print_value = 'ñ', .shifted_print_value = 'Ñ', .alt_gr_print_value = -1},		// 39
-	{.is_pressed = false, .regular_print_value = '´', .shifted_print_value = '¨', .alt_gr_print_value = '{'},	// 40
-	{.is_pressed = false, .regular_print_value = 'ç', .shifted_print_value = 'Ç', .alt_gr_print_value = '}'},	// 41
-	{.is_pressed = false, .regular_print_value = -1,   .shifted_print_value = -1,   .alt_gr_print_value = -1},		// 42
-	{.is_pressed = false, .regular_print_value = '<', .shifted_print_value = '>', .alt_gr_print_value = '|'},	// 43
+	{.is_pressed = false, .regular_print_value = '´', .shifted_print_value = '¨', .alt_gr_print_value = '{'},		// 40
+	{.is_pressed = false, .regular_print_value = 'ç', .shifted_print_value = 'Ç', .alt_gr_print_value = '}'},		// 41
+	{.is_pressed = false, .regular_print_value = -1,  .shifted_print_value = -1,  .alt_gr_print_value = -1},		// 42
+	{.is_pressed = false, .regular_print_value = '<', .shifted_print_value = '>', .alt_gr_print_value = '|'},		// 43
 	{.is_pressed = false, .regular_print_value = 'z', .shifted_print_value = 'Z', .alt_gr_print_value = -1},		// 44
 	{.is_pressed = false, .regular_print_value = 'x', .shifted_print_value = 'X', .alt_gr_print_value = -1},		// 45
 	{.is_pressed = false, .regular_print_value = 'c', .shifted_print_value = 'C', .alt_gr_print_value = -1},		// 46
@@ -81,10 +89,11 @@ static volatile key_t keyboard[105] =
 	{.is_pressed = false, .regular_print_value = ',', .shifted_print_value = ';', .alt_gr_print_value = -1},		// 51
 	{.is_pressed = false, .regular_print_value = '.', .shifted_print_value = ':', .alt_gr_print_value = -1},		// 52
 	{.is_pressed = false, .regular_print_value = '-', .shifted_print_value = '·', .alt_gr_print_value = -1},		// 53
-	{.is_pressed = false, .regular_print_value = -1,   .shifted_print_value = -1,   .alt_gr_print_value = -1},		// 55
-	{.is_pressed = false, .regular_print_value = -1,   .shifted_print_value = -1,   .alt_gr_print_value = -1},		// 56
-	{.is_pressed = false, .regular_print_value = -1,   .shifted_print_value = -1,   .alt_gr_print_value = -1},		// 57
-	{.is_pressed = false, .regular_print_value = ' ', .shifted_print_value = ' ', .alt_gr_print_value = -1},		// 58
+	{.is_pressed = false, .regular_print_value = -1,  .shifted_print_value = -1,  .alt_gr_print_value = -1},		// 54
+	{.is_pressed = false, .regular_print_value = -1,  .shifted_print_value = -1,  .alt_gr_print_value = -1},		// 55
+	{.is_pressed = false, .regular_print_value = -1,  .shifted_print_value = -1,  .alt_gr_print_value = -1},		// 56
+	{.is_pressed = false, .regular_print_value = 1,   .shifted_print_value = 1,   .alt_gr_print_value = 1},			// 57
+	{.is_pressed = false, .regular_print_value = ' ', .shifted_print_value = ' ', .alt_gr_print_value = ' '},		// 58
 
 };
 
@@ -284,12 +293,17 @@ void reset_buffer(void)
 	buffer_end = 0;
 }
 
-bool kbhit(void)
+bool keyboard_get_key_pressed(void)
 {
 	return key_pressed;
 }
 
-uint16_t keyboard_getch()
+bool key_is_pressed( unsigned char key_code)
+{
+	return keyboard[key_code].is_pressed;
+}
+
+uint16_t keyboard_getch(void)
 {
 	while(buffer_end == 0); //If there are no key strokes wait until we get one
 	disable_interrupts();

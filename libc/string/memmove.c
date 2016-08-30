@@ -8,7 +8,7 @@
 *
 */
 
-#include <stdio.h>
+#include <string.h>
 
 
 /*
@@ -17,7 +17,7 @@
 * will be able to copy all the bytes
 */
 
-void* memmove(void* destintation_pointer, void* source_pointer, size_t size)
+void* memmove(void* destintation_pointer, const void* source_pointer, size_t size)
  {
  	unsigned char* dst = (unsigned char*) destintation_pointer;
  	unsigned char* src = (unsigned char*) source_pointer;

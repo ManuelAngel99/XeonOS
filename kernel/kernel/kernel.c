@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 #include <arch/x86/multiboot.h>
 #include <arch/x86/timers.h>
@@ -27,7 +28,6 @@ void kernel_early(void)
 }
 
 
-
 void kernel_main(uint32_t eax, multiboot_info_t *multiboot_pointer)
 {
 
@@ -41,17 +41,17 @@ void kernel_main(uint32_t eax, multiboot_info_t *multiboot_pointer)
 
 
 	printf("XeonOS - 2016\n");
-	printf("CHECKSUM : %d\n", (int)eax);
+	printf("CHECKSUM : %x\n", (int)eax);
 
-	printf("scanf test :");
-	char ch = (char)getchar();
-	printf("result equals \"%c\"", ch);
+
+	printf("scanf test");
+	int a = 0;
+	scanf("%d", &a);
+
 
 	while(true) {
 		if(kbhit())
-		{
-			printf("%c", keyboard_getch());
-		}
+			printf("%c", getch());
 	}
 
 }

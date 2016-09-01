@@ -9,13 +9,13 @@
 #include <stdio.h>
 #include <macros.h>
 
-char* getline(char* output_buffer, size_t* lenght)
+int getline(char* output_buffer, size_t* lenght)
 {
     int current_pos = -1, current_char = -1;
     
     //If any of these is true we cannot perform the read
     if(*lenght == 0 || output_buffer == NULL || lenght == NULL)
-        return "";
+        return -1;
 
     //Get chars until enter is pressed
     while(current_char != '\n')
@@ -41,5 +41,5 @@ char* getline(char* output_buffer, size_t* lenght)
     }
     output_buffer[ min( (int)*lenght, current_pos) ] = '\0';
 
-    return output_buffer;
+    return current_pos;
 }

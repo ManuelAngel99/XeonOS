@@ -10,7 +10,7 @@
         },
         {
             "name": "Linux",
-            "includePath": ["/usr/include","${workspaceRoot}/kernel/include","/opt/cross/lib/gcc/i686-elf/5.4.0/include"],
+            "includePath": ["${workspaceRoot}/libc/include","${workspaceRoot}/kernel/include","/opt/cross/lib/gcc/i686-elf/5.4.0/include","/usr/include"],
             "browse" : {
                 "limitSymbolsToIncludedHeaders" : true,
                 "databaseFilename" : ""

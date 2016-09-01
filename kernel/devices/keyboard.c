@@ -13,6 +13,7 @@
 #include <kernel/portio.h>
 
 #include <stdbool.h>
+#include <stdio.h>
 
 //Define the special key modifiers
 #define CAPS_KEY 29
@@ -23,6 +24,7 @@
 static volatile bool key_pressed, caps_locked;
 static unsigned char keyboard_buffer[129];
 static volatile unsigned int buffer_end = 0;
+static volatile bool print_on_press = false;
 
 typedef struct key
 {
@@ -298,9 +300,18 @@ bool keyboard_get_key_pressed(void)
 	return key_pressed;
 }
 
-bool key_is_pressed( unsigned char key_code)
+bool keyboard_check_key( unsigned char key_code)
 {
 	return keyboard[key_code].is_pressed;
+}
+
+void disable_print(void)
+{
+	print_on_press = false;
+}
+void enable_print(void)
+{
+	print_on_press = true;
 }
 
 uint16_t keyboard_getch(void)
@@ -314,6 +325,9 @@ uint16_t keyboard_getch(void)
 
 	buffer_end--;
 	enable_interrupts();
+
+	if(print_on_press)
+		printf("%c", keyboard_buffer[0]);
 
 	return keyboard_buffer[0];
 }

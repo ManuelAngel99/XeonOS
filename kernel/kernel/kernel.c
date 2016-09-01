@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <string.h>
 
 #include <arch/x86/multiboot.h>
@@ -38,16 +39,16 @@ void kernel_main(uint32_t eax, multiboot_info_t *multiboot_pointer)
 	install_rtc();
 	setup_pmm(multiboot_pointer);
 	install_keyboard();
+	enable_print();
 
 
 	printf("XeonOS - 2016\n");
 	printf("CHECKSUM : %x\n", (int)eax);
 
-
-	printf("scanf test");
-	int a = 0;
-	scanf("%d", &a);
-
+	char c[30];
+	printf("TESTING SCANF! : ");
+	scanf("%s", c);
+	printf("\nSCANF RESULT: %s", c);
 
 	while(true) {
 		if(kbhit())

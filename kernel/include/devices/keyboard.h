@@ -182,9 +182,12 @@ void disable_keyboard(void);
 void keyboard_handler();
 void reset_buffer(void);
 
-bool key_is_pressed( unsigned char key_code);
+bool keyboard_check_key( unsigned char key_code);
 bool keyboard_get_key_pressed(void);
 uint16_t keyboard_getch(void);
+
+void disable_print(void);
+void enable_print(void);
 
 #ifdef _cplusplus
 }

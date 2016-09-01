@@ -13,5 +13,6 @@ int getchar(void)
 {
     char buffer[1];
     size_t lenght = 1;
-    return getline(buffer, &lenght)[0];
+    getline(buffer, &lenght);
+    return buffer[0];
 }

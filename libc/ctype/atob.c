@@ -14,7 +14,7 @@
 int atob(size_t* value_store, char* string, int base)
 {
     size_t value = 0;
-    int digit = 0;
+    int digit = 0, sign = 1;
     //Check the base
     if(base == 0)
     {
@@ -38,12 +38,21 @@ int atob(size_t* value_store, char* string, int base)
 
             string += 2;
         }
+        else
+            return 0;
     }
-    else
-        return 0;
     
     skip:
     *value_store = value;
+
+    if(*string == '-')
+    {
+        sign = -1;
+        string++;
+    }
+    else if(*string == '+')
+        string++;
+
     for(; *string; string++)
     {
         if(*string >= '0' && *string <= '9')
@@ -61,7 +70,8 @@ int atob(size_t* value_store, char* string, int base)
         value *= base;
         value += digit;
     }
-    *value_store = value;
+
+    *value_store = sign*value;
 
     //Success convering the number
     return 1;

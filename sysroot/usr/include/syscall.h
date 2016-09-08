@@ -15,6 +15,7 @@
 #include <stdint.h>
 
 size_t read(int, void*, size_t);
+size_t write(int, void*, size_t);
 
 #ifdef _cplusplus
 }

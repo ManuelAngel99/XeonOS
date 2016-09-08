@@ -24,5 +24,7 @@ int fgetc(FILE* file)
     if( read(file->file_descriptor, &charcater, 1) <= 0 )
         return EOF;
 
+    file->unget = (short)charcater;
+
     return charcater;
 }

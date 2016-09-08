@@ -26,7 +26,6 @@ int getline(char* output_buffer, size_t* lenght)
             if(current_pos >= 0)
             {
                 current_pos--;
-                printf("\b");
             }
         }
         else
@@ -36,7 +35,6 @@ int getline(char* output_buffer, size_t* lenght)
                 current_pos++;
                 output_buffer[current_pos] = current_char;
             }
-            printf("%c", current_char);
         }
     }
     output_buffer[ min( (int)*lenght, current_pos) ] = '\0';

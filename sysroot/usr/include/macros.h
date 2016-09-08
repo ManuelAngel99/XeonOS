@@ -4,6 +4,9 @@
 #include <sys/cdefs.h>
 
 #define min(a, b)  ((a) < (b) ? (a) : (b))
-#define isdigit(character)  (((character) >= '0') && ((character) <= '9'))
+
+#define set_flag(variable, flag)   ( (variable) |= (flag) )
+#define check_flag(variable, flag) ( (variable) & (flag) )
+#define clear_flag(variable, flag) ( (variable) &= ~(flag) )
 
 #endif

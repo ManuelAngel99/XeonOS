@@ -41,7 +41,10 @@ char*  strtok(char*, const char*);
 
 void*  memset(void*, int, size_t);
 size_t strlen(const char*);
+
 char*  reverse(char*, const size_t);
+void string_to_upper(char* string);
+char* insert_char(char*, const size_t, const char, const int);
 
 #ifdef _cplusplus
 }

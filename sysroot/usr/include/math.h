@@ -21,8 +21,19 @@ double floor(double);
 double ceil(double);
 double round(double);
 double pow(double, double);
-double precise_round(double, size_t);
+
+double fmod(double, double);
 double modf(double, double*);
+
+long double roundld(long double);
+long double precise_round(long double, size_t);
+long double modld(long double, long double*);
+long double floorld(long double);
+long double ceilld(long double);
+
+
+
+
 
 #ifdef _cplusplus
 }

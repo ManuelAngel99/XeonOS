@@ -10,6 +10,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
@@ -45,10 +46,14 @@ void kernel_main(uint32_t eax, multiboot_info_t *multiboot_pointer)
 	printf("XeonOS - 2016\n");
 	printf("CHECKSUM : %x\n", (int)eax);
 
-	char c[30];
-	printf("TESTING SCANF! : ");
-	scanf("%s", c);
-	printf("\nSCANF RESULT: %s", c);
+/*	int c = 0;
+	scanf("%d", &c);
+*/
+	char c[100];
+	size_t size = 100;
+	getline(c, &size);
+	printf("\n%s\n",c);
+
 
 	while(true) {
 		if(kbhit())

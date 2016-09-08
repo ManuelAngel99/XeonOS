@@ -13,7 +13,7 @@ EXEC_PREFIX?=$(PREFIX)
 INCLUDEDIR?=$(PREFIX)/include
 LIBDIR?=$(EXEC_PREFIX)/lib
  
-CFLAGS:=$(CFLAGS) -Wall -Wextra -Werror
+CFLAGS:=$(CFLAGS) -Wall -Wextra -Werror -Wno-discarded-qualifiers
 CPPFLAGS:=$(CPPFLAGS) -D__is_xeonos_libc -Iinclude
 LIBK_CFLAGS:=$(CFLAGS) -ffreestanding -fbuiltin
 LIBK_CPPFLAGS:=$(CPPFLAGS) -D__is_xeonos_kernel

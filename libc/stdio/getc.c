@@ -29,6 +29,7 @@ int getc(void)
                 current_pos++;
 
         buffer[current_pos] = getch();
+
     }
 
     return buffer[1];

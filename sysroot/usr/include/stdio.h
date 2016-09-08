@@ -35,7 +35,8 @@ typedef struct FILE
 	void* base;						// Pointer to the start of the file
 	char* file_position;			// Current postion in the file
 	short unget;					// 1 bit buffer for ungetc (the bit 15 is set if not empty)
-	unsigned long alloc;			// Number of allocated bytes in the file 
+	char error;
+	unsigned long alloc;			// Number of allocated bytes in the file
 	unsigned short buffer_increment;// Number of bytes to be allocated at once from this file
 }FILE;
 
@@ -53,13 +54,15 @@ int fclose(FILE*);
 
 
 //Get from file streams
-//int   getc(FILE*);
 int   getchar(void);
-char* gets(char*);
 int   ungetc(int, FILE*);
 
-int scanf(const char*, ...);
+int scanf(const char*  __restrict, ...);
+int vfscanf(FILE *, const char*  __restrict, va_list);
+
 int sscanf(const char*, const char*, ...);
+int vsscanf(const char*, const char*, va_list);
+
 
 int    fgetc(FILE* file);
 char*  fgets(char*, size_t, FILE*);
@@ -68,29 +71,24 @@ int    fscanf(FILE*, const char*, ...);
 
 
 //Send to file streams
-int	 fprintf(FILE *, const char *, ...);
+int	 fprintf(FILE *, const char*  __restrict, ...);
 int	 fputc(int , FILE *);
 int	 fputs(const char *, FILE *);
 size_t fwrite(const void *, size_t, size_t, FILE *);
 
-int	printf	(const char *, ...);
+int	printf	(const char * __restrict , ...);
 int	putc	(int, FILE *);
 int	putchar	(int);
 int	puts	(const char *);
 
 int	 sprintf(char *, const char *, ...);
 int	 snprintf(char *, size_t, const char *, ...);
-int	 vfprintf (FILE *, const char *, va_list);
+int	 vfprintf (FILE *, const char *  __restrict, va_list);
 int	 vprintf	(const char *, va_list);
 int	 vsprintf (char *, const char *, va_list);
 void perror (const char *);
 
-void print(const char*, size_t);
-int printf(const char* __restrict, ...);
-int putchar(int);
-int puts(const char*);
-void print_int(long long, size_t);
-void print_double(double);
+
 
 int getchar(void);
 int getc(void);

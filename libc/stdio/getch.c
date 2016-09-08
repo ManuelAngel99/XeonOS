@@ -16,10 +16,5 @@
 
 int getch(void)
 {
-#if defined(__is_xeonos_kernel)
-    return keyboard_getch();
-#else
-	//TODO: IMPLEMENT A SYSTEM CALL
-#endif
-	return -1;
+	return fgetc(stdin);
 }

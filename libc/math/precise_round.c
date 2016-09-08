@@ -10,7 +10,8 @@
 #include <math.h>
 #include <stddef.h>
 
-double precise_round(double value, size_t decimal_paces)
+long double precise_round(long double value, size_t decimal_paces)
 {
-	return round(value*pow(10,decimal_paces))/pow(10,decimal_paces);
+	long double fac = pow(10, decimal_paces);
+	return roundld(value*fac)/fac;
 }
